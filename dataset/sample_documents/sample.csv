@@ -1,0 +1,4 @@
+equipment_id,equipment_name,failure_mode,downtime_hours
+EQ-101,Compressor A,Bearing Failure,4.5
+EQ-102,Turbine B,Vibration,2.0
+EQ-103,Pump C,Seal Leak,1.5

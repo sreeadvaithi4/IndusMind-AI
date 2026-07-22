@@ -1,0 +1,17 @@
+{% comment %}
+  Upload Queue — client-side list of files currently queued, uploading,
+  or just-completed in this browser session. Rendered entirely by
+  static/js/upload-workspace.js; this partial only provides the
+  container and empty state.
+{% endcomment %}
+<section class="upload-queue-wrapper" data-animate>
+  {% include "dashboard/components/_section_header.html" with title="Upload Queue" subtitle="Files uploading in this session" %}
+
+  <div class="dash-card p-3">
+    <ul class="upload-queue" data-upload-queue>
+      <li class="upload-queue__empty" data-upload-queue-empty>
+        No files queued yet. Drag files into the drop zone to get started.
+      </li>
+    </ul>
+  </div>
+</section>

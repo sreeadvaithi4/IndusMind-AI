@@ -1,0 +1,446 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IndusMind AI — Industrial Knowledge Intelligence Platform</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-display: 'Poppins', sans-serif;
+      --brand-primary: #2563eb;
+      --brand-dark: #1d4ed8;
+      --brand-light: #3b82f6;
+    }
+
+    body {
+      font-family: var(--font-primary);
+      -webkit-font-smoothing: antialiased;
+      background: #ffffff;
+      color: #1f2937;
+    }
+
+    .font-display { font-family: var(--font-display); }
+
+    .home-nav {
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .nav-link-home {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: #64748b;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .nav-link-home:hover { color: #1f2937; background: #f8fafc; }
+    .nav-link-home.active { color: var(--brand-primary); font-weight: 600; }
+
+    .hero-section {
+      padding: 8rem 0 5rem;
+      background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #1d4ed8;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-badge .dot {
+      width: 6px; height: 6px; border-radius: 50%; background: #2563eb;
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: #0f172a;
+    }
+
+    .hero-title .highlight { color: var(--brand-primary); }
+
+    .hero-description {
+      font-size: 1.125rem;
+      color: #64748b;
+      line-height: 1.75;
+      margin-top: 1.25rem;
+      max-width: 580px;
+    }
+
+    .btn-hero-primary {
+      background: var(--brand-primary);
+      color: #ffffff;
+      padding: 0.9375rem 2rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      border: none;
+      box-shadow: 0 4px 20px rgba(37,99,235,0.3);
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-hero-primary:hover {
+      background: var(--brand-dark);
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(37,99,235,0.4);
+    }
+
+    .btn-hero-secondary {
+      background: #ffffff;
+      color: #374151;
+      padding: 0.9375rem 2rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      border: 2px solid #e5e7eb;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-hero-secondary:hover {
+      border-color: #bfdbfe;
+      background: #f8fafc;
+      color: var(--brand-primary);
+      transform: translateY(-1px);
+    }
+
+    .hero-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+      color: #94a3b8;
+    }
+
+    .hero-stat .dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+    }
+
+    .section-subtitle {
+      font-size: 1rem;
+      color: #64748b;
+      margin-top: 0.75rem;
+      max-width: 560px;
+    }
+
+    .service-card {
+      background: #ffffff;
+      border: 1px solid #f1f5f9;
+      border-radius: 16px;
+      padding: 2rem;
+      height: 100%;
+      transition: all 0.25s ease;
+    }
+
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+      border-color: #dbeafe;
+    }
+
+    .service-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .service-card h5 { font-size: 0.9375rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; }
+    .service-card p { font-size: 0.8125rem; color: #64748b; line-height: 1.7; margin: 0; }
+
+    .step-icon {
+      width: 64px; height: 64px; border-radius: 18px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 1.75rem; margin-bottom: 0.75rem; border: 2px solid;
+    }
+
+    .cta-card {
+      background: linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #3b82f6 100%);
+      border-radius: 24px;
+      padding: 4rem 3rem;
+      text-align: center;
+      box-shadow: 0 24px 64px rgba(37,99,235,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-card h2 { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: #ffffff; position: relative; }
+    .cta-card p { color: #bfdbfe; font-size: 1.0625rem; margin-top: 0.75rem; position: relative; }
+
+    .btn-cta-primary {
+      background: #ffffff; color: var(--brand-dark); padding: 1rem 2rem;
+      border-radius: 12px; font-weight: 700; font-size: 0.9375rem;
+      border: none; text-decoration: none; display: inline-flex;
+      align-items: center; gap: 0.5rem; transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1); position: relative;
+    }
+
+    .btn-cta-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.15); color: var(--brand-dark); }
+
+    .btn-cta-secondary {
+      background: transparent; color: #ffffff; padding: 1rem 2rem;
+      border-radius: 12px; font-weight: 600; font-size: 0.9375rem;
+      border: 2px solid rgba(255,255,255,0.25); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      transition: all 0.2s ease; position: relative;
+    }
+
+    .btn-cta-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); color: #ffffff; }
+
+    .footer-link { color: #64748b; text-decoration: none; font-size: 0.8125rem; transition: color 0.15s; }
+    .footer-link:hover { color: #ffffff; }
+
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2.25rem; }
+      .hero-section { padding: 6rem 0 3rem; }
+      .section-title { font-size: 1.75rem; }
+      .cta-card { padding: 3rem 1.5rem; }
+    }
+
+    .fade-up { opacity: 0; transform: translateY(20px); animation: fadeUp 0.6s ease forwards; }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    .fade-up-d1 { animation-delay: 0.1s; }
+    .fade-up-d2 { animation-delay: 0.2s; }
+    .fade-up-d3 { animation-delay: 0.3s; }
+    .fade-up-d4 { animation-delay: 0.4s; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="home-nav navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="/home/">
+        <div class="d-flex align-items-center justify-content-center rounded-3 text-white fw-bold" style="width: 34px; height: 34px; font-size: 11px; background: linear-gradient(135deg, #2563eb, #1d4ed8); box-shadow: 0 4px 12px rgba(37,99,235,0.25);">IM</div>
+        <span class="fw-bold" style="font-size: 0.95rem; color: #0f172a;">IndusMind <span style="color: #2563eb;">AI</span></span>
+      </a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#homeNav"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="homeNav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item"><a class="nav-link-home active" href="/home/">Home</a></li>
+          <li class="nav-item"><a class="nav-link-home" href="#features">Features</a></li>
+          <li class="nav-item"><a class="nav-link-home" href="#how-it-works">How It Works</a></li>
+          <li class="nav-item"><a class="nav-link-home" href="/chatbot/">AI Assistant</a></li>
+          <li class="nav-item"><a class="nav-link-home" href="/dashboard/">Dashboard</a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-2">
+          <a href="/chatbot/" class="btn-hero-primary" style="padding: 0.625rem 1.25rem; font-size: 0.8125rem;"><i class="bi bi-rocket-takeoff"></i> Launch AI</a>
+          <form method="post" action="/logout/" class="d-inline">{% csrf_token %}<button type="submit" class="btn btn-link text-secondary text-decoration-none" style="font-size: 0.8125rem;">Logout</button></form>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-7">
+          <div class="hero-badge fade-up"><span class="dot"></span> Enterprise Industrial Intelligence Platform</div>
+          <h1 class="hero-title fade-up fade-up-d1">IndusMind <span class="highlight">AI</span></h1>
+          <p class="hero-description fade-up fade-up-d2">Transform industrial documents into actionable AI-powered operational intelligence using Multi-Agent AI — for maintenance, compliance, engineering drawings, and knowledge discovery.</p>
+          <div class="d-flex flex-wrap gap-3 mt-4 fade-up fade-up-d3">
+            <a href="/chatbot/" class="btn-hero-primary"><i class="bi bi-rocket-takeoff"></i> Launch AI Assistant</a>
+            <a href="/documents/" class="btn-hero-secondary"><i class="bi bi-file-earmark-arrow-up"></i> Upload Documents</a>
+          </div>
+          <div class="d-flex flex-wrap gap-4 mt-5 fade-up fade-up-d4">
+            <div class="hero-stat"><span class="dot"></span> 528 Tests Passing</div>
+            <div class="hero-stat"><span class="dot"></span> 21 AI Services</div>
+            <div class="hero-stat"><span class="dot"></span> 5 Expert Agents</div>
+            <div class="hero-stat"><span class="dot"></span> Multi-Agent Orchestration</div>
+          </div>
+        </div>
+        <div class="col-lg-5 d-none d-lg-block text-center">
+          <div style="width: 100%; max-width: 380px; margin: 0 auto; padding: 2rem; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 24px; border: 1px solid #bfdbfe;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🏭</div>
+            <div class="d-flex justify-content-center gap-2 flex-wrap">
+              <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2" style="font-size: 0.7rem;">🔧 Maintenance</span>
+              <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2" style="font-size: 0.7rem;">⚖️ Compliance</span>
+              <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-2" style="font-size: 0.7rem;">⚠️ Failures</span>
+              <span class="badge bg-info bg-opacity-10 text-info rounded-pill px-3 py-2" style="font-size: 0.7rem;">📐 Drawings</span>
+              <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill px-3 py-2" style="font-size: 0.7rem;">🧠 Knowledge</span>
+              <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3 py-2" style="font-size: 0.7rem;">🎙️ Briefing</span>
+            </div>
+            <div class="mt-3" style="font-size: 0.75rem; color: #64748b;">Multi-Agent Intelligence</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="py-5" id="about">
+    <div class="container">
+      <div class="row align-items-center gy-4">
+        <div class="col-lg-6">
+          <h2 class="section-title">About IndusMind AI</h2>
+          <p class="section-subtitle">An AI-first platform purpose-built for heavy industry.</p>
+          <div class="mt-4" style="font-size: 0.875rem; color: #4b5563; line-height: 1.8;">
+            <p><strong>Mission:</strong> Democratize industrial knowledge by making enterprise documents instantly searchable, analyzable, and actionable through AI.</p>
+            <p class="mt-3"><strong>Vision:</strong> Every maintenance engineer, quality manager, and operations director has an AI copilot that understands their equipment, procedures, and compliance obligations.</p>
+            <p class="mt-3"><strong>Business Value:</strong> Reduce RCA time from hours to minutes. Automate audit evidence gathering. Prevent equipment failures through proactive intelligence.</p>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="row g-3">
+            <div class="col-6"><div class="p-4 rounded-4 text-center" style="background: #f0fdf4; border: 1px solid #dcfce7;"><div style="font-size: 2rem;">📄</div><div class="mt-2 fw-semibold" style="font-size: 0.8125rem; color: #166534;">Document Intelligence</div></div></div>
+            <div class="col-6"><div class="p-4 rounded-4 text-center" style="background: #eff6ff; border: 1px solid #dbeafe;"><div style="font-size: 2rem;">🤖</div><div class="mt-2 fw-semibold" style="font-size: 0.8125rem; color: #1e40af;">Multi-Agent AI</div></div></div>
+            <div class="col-6"><div class="p-4 rounded-4 text-center" style="background: #fef3c7; border: 1px solid #fde68a;"><div style="font-size: 2rem;">⚠️</div><div class="mt-2 fw-semibold" style="font-size: 0.8125rem; color: #92400e;">Proactive Alerts</div></div></div>
+            <div class="col-6"><div class="p-4 rounded-4 text-center" style="background: #faf5ff; border: 1px solid #e9d5ff;"><div style="font-size: 2rem;">🧠</div><div class="mt-2 fw-semibold" style="font-size: 0.8125rem; color: #6b21a8;">Knowledge Graph</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="py-5" id="features" style="background: #f8fafc;">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title">Platform Intelligence</h2>
+        <p class="section-subtitle mx-auto">Eight specialized AI modules working together</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3"><div class="service-card"><div class="service-icon" style="background:#eff6ff;color:#2563eb;">🔍</div><h5>Hybrid RAG</h5><p>Semantic search + Knowledge Graph + metadata combined for intelligent retrieval with citations</p></div></div>
+        <div class="col-md-6 col-lg-3"><div class="service-card"><div class="service-icon" style="background:#faf5ff;color:#7c3aed;">🧠</div><h5>Knowledge Graph</h5><p>30 entity types, 20 relationship types — fully connected industrial ontology</p></div></div>
+        <div class="col-md-6 col-lg-3"><div class="service-card"><div class="service-icon" style="background:#fff7ed;color:#ea580c;">🔧</div><h5>Maintenance RCA</h5><p>Root cause analysis with 15 failure modes, risk assessment, and corrective actions</p></div></div>
+        <div class="col-md-6 col-lg-3"><div class="service-card"><div class="service-icon" style="background:#f0fdf4;color:#16a34a;">⚖️</div><h5>Compliance AI</h5><p>ISO 9001, API, ASME, OSHA — gap analysis, audit findings, CAPA/NCR</p></div></div>
+        <div class="col-md-6 col-lg-3"><div class="service-card"><div class="service-icon" style="background:#fef2f2;color:#dc2626;">📚</div><h5>Failure Intelligence</h5><p>Historical incidents, recurring patterns, lessons learned, preventive knowledge</p></div></div>
+        <div class="col-md-6 col-lg-3"><div class="service-card"><div class="service-icon" style="background:#ecfeff;color:#0891b2;">📐</div><h5>Drawing Intelligence</h5><p>P&ID analysis, equipment detection, symbol recognition, 20+ symbol types</p></div></div>
+        <div class="col-md-6 col-lg-3"><div class="service-card"><div class="service-icon" style="background:#fffbeb;color:#d97706;">🎙️</div><h5>Executive Briefing</h5><p>AI-generated operations briefings with plant health, risk, and compliance scores</p></div></div>
+        <div class="col-md-6 col-lg-3"><div class="service-card"><div class="service-icon" style="background:#eef2ff;color:#4f46e5;">⚠️</div><h5>Warning Engine</h5><p>Cross-domain alerts with severity levels, evidence-backed, real-time detection</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="py-5" id="how-it-works">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-subtitle mx-auto">From document upload to intelligent operations reports</p>
+      </div>
+      <div class="row align-items-center justify-content-center g-3">
+        <div class="col-auto text-center"><div class="step-icon" style="background:#eff6ff;border-color:#bfdbfe;color:#2563eb;">📄</div><div class="fw-semibold" style="font-size:0.75rem;">Upload</div></div>
+        <div class="col-auto text-center"><i class="bi bi-arrow-right" style="font-size:1.5rem;color:#d1d5db;"></i></div>
+        <div class="col-auto text-center"><div class="step-icon" style="background:#faf5ff;border-color:#e9d5ff;color:#7c3aed;">🧠</div><div class="fw-semibold" style="font-size:0.75rem;">AI Analysis</div></div>
+        <div class="col-auto text-center"><i class="bi bi-arrow-right" style="font-size:1.5rem;color:#d1d5db;"></i></div>
+        <div class="col-auto text-center"><div class="step-icon" style="background:#f0fdf4;border-color:#bbf7d0;color:#16a34a;">🤖</div><div class="fw-semibold" style="font-size:0.75rem;">Multi-Agent</div></div>
+        <div class="col-auto text-center"><i class="bi bi-arrow-right" style="font-size:1.5rem;color:#d1d5db;"></i></div>
+        <div class="col-auto text-center"><div class="step-icon" style="background:#fffbeb;border-color:#fde68a;color:#d97706;">📊</div><div class="fw-semibold" style="font-size:0.75rem;">Intelligence</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-5">
+    <div class="container">
+      <div class="cta-card">
+        <h2>Ready to transform your industrial knowledge?</h2>
+        <p>Upload documents and let multi-agent AI extract actionable intelligence.</p>
+        <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
+          <a href="/chatbot/" class="btn-cta-primary"><i class="bi bi-rocket-takeoff"></i> Launch AI Assistant</a>
+          <a href="/documents/" class="btn-cta-secondary"><i class="bi bi-file-earmark-arrow-up"></i> Upload Documents</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background: #0f172a; padding: 4rem 0 2rem;">
+    <div class="container">
+      <div class="row gy-4">
+        <div class="col-lg-4">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="d-flex align-items-center justify-content-center rounded-3 text-white fw-bold" style="width:32px;height:32px;font-size:10px;background:linear-gradient(135deg,#2563eb,#1d4ed8);">IM</div>
+            <span class="fw-bold text-white">IndusMind <span style="color:#60a5fa;">AI</span></span>
+          </div>
+          <p style="font-size:0.8125rem;color:#64748b;line-height:1.7;">Enterprise Industrial Intelligence Platform. Multi-agent AI for maintenance, compliance, and knowledge discovery.</p>
+          <div class="d-flex gap-3 mt-3">
+            <a href="#" style="color:#64748b;font-size:1.1rem;"><i class="bi bi-github"></i></a>
+            <a href="#" style="color:#64748b;font-size:1.1rem;"><i class="bi bi-linkedin"></i></a>
+            <a href="#" style="color:#64748b;font-size:1.1rem;"><i class="bi bi-instagram"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-2 col-6">
+          <h6 class="text-white fw-semibold mb-3" style="font-size:0.8125rem;">Platform</h6>
+          <ul class="list-unstyled" style="font-size:0.8125rem;"><li class="mb-2"><a href="/chatbot/" class="footer-link">AI Assistant</a></li><li class="mb-2"><a href="/dashboard/" class="footer-link">Dashboard</a></li><li class="mb-2"><a href="/documents/" class="footer-link">Documents</a></li><li class="mb-2"><a href="/analytics/" class="footer-link">Analytics</a></li></ul>
+        </div>
+        <div class="col-lg-2 col-6">
+          <h6 class="text-white fw-semibold mb-3" style="font-size:0.8125rem;">Resources</h6>
+          <ul class="list-unstyled" style="font-size:0.8125rem;"><li class="mb-2"><a href="#" class="footer-link">Documentation</a></li><li class="mb-2"><a href="#" class="footer-link">Architecture</a></li><li class="mb-2"><a href="#" class="footer-link">API Reference</a></li></ul>
+        </div>
+        <div class="col-lg-2 col-6">
+          <h6 class="text-white fw-semibold mb-3" style="font-size:0.8125rem;">Contact</h6>
+          <ul class="list-unstyled" style="font-size:0.8125rem;"><li class="mb-2"><span style="color:#64748b;">team@indusmind.ai</span></li><li class="mb-2"><a href="#" class="footer-link">LinkedIn</a></li><li class="mb-2"><a href="#" class="footer-link">GitHub</a></li></ul>
+        </div>
+        <div class="col-lg-2 col-6">
+          <h6 class="text-white fw-semibold mb-3" style="font-size:0.8125rem;">Powered By</h6>
+          <ul

@@ -1,0 +1,38 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/upload-workspace.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-shell">
+  {% include "dashboard/partials/sidebar.html" %}
+
+  <div class="dashboard-shell__main">
+    {% include "dashboard/partials/topbar.html" %}
+
+    <div class="dashboard-shell__body upload-workspace-body">
+      <main class="upload-workspace-grid">
+        <div class="upload-workspace-grid__left">
+          {% include "dashboard/partials/upload_dropzone.html" %}
+        </div>
+
+        <div class="upload-workspace-grid__center">
+          {% include "dashboard/partials/upload_queue.html" %}
+          {% include "dashboard/partials/upload_processing.html" %}
+          {% include "dashboard/partials/upload_documents_table.html" %}
+        </div>
+
+        <div class="upload-workspace-grid__right">
+          {% include "dashboard/partials/upload_sidebar_panel.html" %}
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/upload-workspace.js' %}"></script>
+{% endblock %}

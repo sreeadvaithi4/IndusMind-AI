@@ -1,0 +1,17 @@
+{% comment %}
+  Reusable Dashboard Card primitive.
+
+  Wraps arbitrary block content in the standard elevated dashboard card
+  shell (glassmorphism surface, rounded corners, soft shadow, hover
+  lift). Use Django's {% block %}-less content-injection pattern via
+  the "with" tag isn't sufficient for arbitrary markup, so this
+  component is used as an {% include %} wrapper is not possible for
+  rich inner markup — instead apply the "dash-card" utility class
+  directly on container elements that need this treatment. This file
+  documents the canonical class contract so all cards stay consistent.
+
+  Canonical classes:
+    .dash-card                 base card shell
+    .dash-card--interactive    adds hover-lift affordance
+    .dash-card--glass          glassmorphism variant (right panel, topbar)
+{% endcomment %}

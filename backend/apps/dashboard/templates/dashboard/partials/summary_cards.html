@@ -1,0 +1,13 @@
+{% comment %}
+  Document Summary Cards: six metric cards showing platform-wide
+  document/knowledge-graph/storage statistics.
+{% endcomment %}
+<section data-summary-cards>
+  {% include "dashboard/components/_section_header.html" with title="Overview" subtitle="Platform-wide document and knowledge base statistics" %}
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    {% for card in summary_cards %}
+      {% include "dashboard/components/_metric_card.html" with card=card %}
+    {% endfor %}
+  </div>
+</section>

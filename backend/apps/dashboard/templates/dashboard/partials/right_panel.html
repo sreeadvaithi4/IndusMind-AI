@@ -1,0 +1,22 @@
+{% comment %}
+  Right Information Panel: system health for embedding service,
+  knowledge graph, vector database, and Gemini connection.
+{% endcomment %}
+<aside class="dashboard-right-panel" data-right-panel>
+  {% include "dashboard/components/_section_header.html" with title="System Health" subtitle="Live status of core platform services" %}
+
+  <ul class="system-health-list" data-animate>
+    {% for service in system_health %}
+    <li class="system-health-item">
+      <div class="system-health-item__label">
+        <span class="system-health-item__dot system-health-item__dot--{{ service.status }}"></span>
+        {{ service.label }}
+      </div>
+      <div class="system-health-item__detail">{{ service.detail }}</div>
+      <div class="system-health-item__badge">
+        {% include "dashboard/components/_status_badge.html" with status=service.status %}
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</aside>

@@ -1,0 +1,243 @@
+/* ============================================================
+   IndusMind AI — Enterprise Design System
+   ============================================================ */
+
+/* ---- Root Variables ---- */
+:root {
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Poppins', 'Inter', sans-serif;
+
+  /* Dark Theme */
+  --dark-bg: #0d1117;
+  --dark-surface: #161b22;
+  --dark-card: #1c2128;
+  --dark-border: #30363d;
+  --dark-hover: #21262d;
+
+  /* Brand Colors */
+  --brand-primary: #2563eb;
+  --brand-primary-hover: #1d4ed8;
+  --brand-primary-light: #3b82f6;
+  --brand-primary-glow: rgba(37, 99, 235, 0.3);
+  --brand-gradient: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+
+  /* Status Colors */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #06b6d4;
+  --purple: #8b5cf6;
+
+  /* Text */
+  --text-primary: #f0f6fc;
+  --text-secondary: #8b949e;
+  --text-muted: #6e7681;
+  --text-dark: #1f2937;
+}
+
+/* ---- Global Styles ---- */
+body {
+  font-family: var(--font-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* ---- Dark Theme Background ---- */
+.bg-dark-custom {
+  background-color: var(--dark-bg);
+}
+
+.bg-dark-surface {
+  background-color: var(--dark-surface);
+}
+
+.bg-dark-card {
+  background-color: var(--dark-card);
+}
+
+/* ---- Glass Effect ---- */
+.glass {
+  background: rgba(22, 27, 34, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--dark-border);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* ---- Card Styles ---- */
+.card-dark {
+  background-color: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card-dark:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border-color: rgba(37, 99, 235, 0.3);
+}
+
+.card-light {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card-light:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* ---- Buttons ---- */
+.btn-brand {
+  background: var(--brand-primary);
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px var(--brand-primary-glow);
+}
+
+.btn-brand:hover {
+  background: var(--brand-primary-hover);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px var(--brand-primary-glow);
+}
+
+.btn-outline-brand {
+  background: transparent;
+  color: var(--text-primary);
+  border: 2px solid var(--dark-border);
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-brand:hover {
+  border-color: var(--brand-primary);
+  color: var(--brand-primary-light);
+  background: rgba(37, 99, 235, 0.05);
+}
+
+/* ---- Gradient Text ---- */
+.gradient-text {
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ---- Status Indicators ---- */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot-success { background-color: var(--success); }
+.status-dot-warning { background-color: var(--warning); }
+.status-dot-danger { background-color: var(--danger); }
+.status-dot-info { background-color: var(--info); }
+
+/* ---- Badges ---- */
+.badge-success-soft { background: rgba(16, 185, 129, 0.1); color: var(--success); font-weight: 600; }
+.badge-warning-soft { background: rgba(245, 158, 11, 0.1); color: var(--warning); font-weight: 600; }
+.badge-danger-soft { background: rgba(239, 68, 68, 0.1); color: var(--danger); font-weight: 600; }
+.badge-info-soft { background: rgba(6, 182, 212, 0.1); color: var(--info); font-weight: 600; }
+.badge-purple-soft { background: rgba(139, 92, 246, 0.1); color: var(--purple); font-weight: 600; }
+.badge-primary-soft { background: rgba(37, 99, 235, 0.1); color: var(--brand-primary-light); font-weight: 600; }
+
+/* ---- Animations ---- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.fade-in { animation: fadeIn 0.4s ease forwards; }
+.slide-up { animation: slideUp 0.5s ease forwards; }
+.pulse-glow { animation: pulse-glow 2s infinite; }
+
+/* Staggered animation delays */
+.delay-1 { animation-delay: 0.1s; opacity: 0; }
+.delay-2 { animation-delay: 0.2s; opacity: 0; }
+.delay-3 { animation-delay: 0.3s; opacity: 0; }
+.delay-4 { animation-delay: 0.4s; opacity: 0; }
+
+/* ---- Skeleton Loading ---- */
+.skeleton {
+  background: linear-gradient(90deg, var(--dark-card) 25%, var(--dark-hover) 50%, var(--dark-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* ---- Scrollbar ---- */
+.scrollbar-thin::-webkit-scrollbar { width: 6px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: var(--dark-border); border-radius: 3px; }
+.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+/* ---- Section Titles ---- */
+.section-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+/* ---- Alert Cards (for warnings) ---- */
+.alert-card {
+  border-left: 4px solid;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  background: var(--dark-card);
+}
+
+.alert-card-critical { border-color: var(--danger); }
+.alert-card-high { border-color: #f97316; }
+.alert-card-medium { border-color: var(--warning); }
+.alert-card-low { border-color: var(--info); }
+
+/* ---- Responsive Utilities ---- */
+@media (max-width: 768px) {
+  .hide-mobile { display: none !important; }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop { display: none !important; }
+}

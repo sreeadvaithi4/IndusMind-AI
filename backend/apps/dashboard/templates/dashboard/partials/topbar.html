@@ -1,0 +1,33 @@
+{% comment %}
+  Top navigation bar: mobile sidebar toggle, search, upload button,
+  notifications, dark mode toggle, profile avatar.
+{% endcomment %}
+<header class="dashboard-topbar">
+  <button type="button" class="dashboard-topbar__mobile-toggle" data-sidebar-mobile-toggle aria-label="Open navigation menu">
+    {% include "shared/_icon.html" with icon_name="bars-3" %}
+  </button>
+
+  <label class="dashboard-search" for="dashboard-search-input">
+    <span class="dashboard-search__icon">{% include "shared/_icon.html" with icon_name="magnifying-glass" %}</span>
+    <input
+      id="dashboard-search-input"
+      type="search"
+      placeholder="Search documents, chats, knowledge graph…"
+      class="dashboard-search__input"
+    >
+  </label>
+
+  <div class="dashboard-topbar__actions">
+    <a href="{% url 'dashboard:upload' %}" class="ds-btn ds-btn-primary hidden sm:inline-flex">
+      {% include "shared/_icon.html" with icon_name="arrow-up-tray" %}
+      Upload
+    </a>
+
+    {% include "dashboard/components/_nav_item.html" with icon="bell" aria_label="Notifications" data_attr="data-notifications-toggle" badge_count=3 %}
+    {% include "dashboard/components/_nav_item.html" with icon="moon" aria_label="Toggle dark mode" data_attr="data-theme-toggle" %}
+
+    <button type="button" class="dashboard-avatar" aria-label="Profile menu" data-attr="data-profile-toggle">
+      <span class="dashboard-avatar__initials">AM</span>
+    </button>
+  </div>
+</header>

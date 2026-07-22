@@ -1,0 +1,23 @@
+{% comment %}
+  Activity Feed: chronological stream of recent uploads, AI chats,
+  indexing completions, and system messages.
+{% endcomment %}
+<section data-activity-feed>
+  {% include "dashboard/components/_section_header.html" with title="Activity Feed" subtitle="What's happened across your workspace recently" %}
+
+  <div class="dash-card p-2" data-animate>
+    <ul class="activity-feed">
+      {% for entry in activity_feed %}
+      <li class="activity-feed__item">
+        <span class="activity-feed__icon activity-feed__icon--{{ entry.type }}">
+          {% include "shared/_icon.html" with icon_name=entry.icon %}
+        </span>
+        <div class="activity-feed__body">
+          <p class="activity-feed__message">{{ entry.message }}</p>
+          <p class="activity-feed__timestamp">{{ entry.timestamp }}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

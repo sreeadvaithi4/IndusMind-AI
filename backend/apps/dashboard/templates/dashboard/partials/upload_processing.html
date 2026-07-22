@@ -1,0 +1,25 @@
+{% comment %}
+  Processing Status widget for the Upload Workspace. Mirrors the visual
+  language of dashboard/partials/processing_status.html (reusing the
+  same .pipeline-stage / .pipeline-connector CSS from dashboard.css),
+  but only renders the stages this sprint actually implements:
+  Uploading -> Saving File -> Ready For Parsing. Parsing onward are
+  shown as explicitly upcoming/inactive, since those stages are not
+  implemented in the backend yet (see PROJECT_CONTEXT.md).
+{% endcomment %}
+<section class="upload-processing-wrapper" data-animate>
+  {% include "dashboard/components/_section_header.html" with title="Processing Status" subtitle="Live status of files as they move through the pipeline" %}
+
+  <div class="dash-card p-6" data-upload-processing>
+    <p class="upload-processing__empty" data-upload-processing-empty>
+      Upload a file to see its processing status here.
+    </p>
+
+    <div class="pipeline-track" data-upload-pipeline-track hidden>
+      <!-- Stage nodes are rendered by static/js/upload-workspace.js
+           for the most recently active file, using the same
+           .pipeline-stage / .pipeline-connector classes as the
+           Dashboard's processing widget. -->
+    </div>
+  </div>
+</section>

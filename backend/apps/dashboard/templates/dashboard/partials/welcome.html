@@ -1,0 +1,30 @@
+{% comment %}
+  Welcome section: greeting, last login / recent activity summary, and
+  quick action buttons.
+{% endcomment %}
+<section class="dash-card p-6 sm:p-8" data-animate>
+  <div class="flex flex-wrap items-start justify-between gap-6">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+        Welcome back, {{ welcome.user_display_name }}
+      </h1>
+      <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+        Last login {{ welcome.last_login }} · {{ welcome.recent_activity_count }} recent activity events
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
+    {% for action in quick_actions %}
+    <a
+      href="{% if action.url_name %}{% url action.url_name %}{% else %}#{% endif %}"
+      class="quick-action-btn {% if action.style == 'primary' %}quick-action-btn--primary{% endif %}"
+    >
+      <span class="quick-action-btn__icon">
+        {% include "shared/_icon.html" with icon_name=action.icon %}
+      </span>
+      <span class="quick-action-btn__label">{{ action.label }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>

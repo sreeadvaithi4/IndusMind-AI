@@ -1,0 +1,434 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}AI Assistant — IndusMind AI{% endblock %}
+
+{% block body_class %}{% endblock %}
+
+{% block navbar %}
+  {% include "components/navbar.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column" style="height: calc(100vh - 57px); background: var(--dark-bg);">
+
+  <!-- Chat Messages Area -->
+  <div class="flex-grow-1 overflow-auto scrollbar-thin" id="chatScroll">
+    <div class="mx-auto px-3 py-4" style="max-width: 780px;" id="chatMessages">
+
+      <!-- Welcome Screen -->
+      <div id="welcomeBlock" class="d-flex flex-column align-items-center justify-content-center text-center" style="min-height: 60vh;">
+        <div class="d-flex align-items-center justify-content-center rounded-4 mb-4"
+             style="width: 64px; height: 64px; background: linear-gradient(135deg, #2563eb, #1d4ed8); box-shadow: 0 8px 32px rgba(37,99,235,0.25);">
+          <span class="text-white fw-bold" style="font-size: 1.25rem;">IM</span>
+        </div>
+        <h2 class="text-white fw-bold mb-2" style="font-size: 1.5rem;">IndusMind AI</h2>
+        <p class="text-secondary mb-4" style="font-size: 0.875rem; max-width: 420px;">
+          Ask about equipment, maintenance procedures, compliance, engineering drawings, or any industrial knowledge.
+        </p>
+        <div class="d-flex flex-wrap justify-content-center gap-2" style="max-width: 560px;">
+          <button class="btn-chip" onclick="submitQuery('Why is pump P-101A vibrating?')">
+            <i class="bi bi-wrench me-1"></i> Why is P-101A vibrating?
+          </button>
+          <button class="btn-chip" onclick="submitQuery('Is P-101A compliant with ISO 9001?')">
+            <i class="bi bi-shield-check me-1"></i> ISO 9001 compliance
+          </button>
+          <button class="btn-chip" onclick="submitQuery('What equipment is in Process Area A?')">
+            <i class="bi bi-building-gear me-1"></i> Equipment in Area A
+          </button>
+          <button class="btn-chip" onclick="submitQuery('Show failures affecting pump P-101A')">
+            <i class="bi bi-exclamation-triangle me-1"></i> Failure history
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Typing Indicator -->
+  <div class="mx-auto px-3 d-none" id="typingArea" style="max-width: 780px;">
+    <div class="d-flex align-items-center gap-2 py-2 ps-5">
+      <div class="typing-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <span class="text-secondary" style="font-size: 0.75rem;">Analyzing with multi-agent AI...</span>
+    </div>
+  </div>
+
+  <!-- Input Area -->
+  <div style="border-top: 1px solid var(--dark-border); background: var(--dark-surface);">
+    <div class="mx-auto px-3 py-3" style="max-width: 780px;">
+      <form id="chatForm" class="input-wrapper d-flex align-items-end gap-2">
+        <textarea id="chatInput" rows="1" placeholder="Message IndusMind AI..." class="chat-textarea"></textarea>
+        <button type="submit" id="sendBtn" class="btn-send" disabled>
+          <i class="bi bi-arrow-up"></i>
+        </button>
+      </form>
+      <p class="text-center mt-2 mb-0" style="font-size: 0.6875rem; color: var(--text-muted);">
+        IndusMind AI grounds all responses in your uploaded industrial documents. Always verify critical decisions.
+      </p>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ---- Chat Input ---- */
+  .input-wrapper {
+    background: var(--dark-card);
+    border: 1px solid var(--dark-border);
+    border-radius: 16px;
+    padding: 0.625rem 0.75rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .input-wrapper:focus-within {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+  }
+
+  .chat-textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    color: var(--text-primary);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    max-height: 160px;
+    padding: 0.375rem 0.5rem;
+    font-family: var(--font-primary);
+  }
+
+  .chat-textarea::placeholder { color: var(--text-muted); }
+
+  .btn-send {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--brand-primary);
+    color: #ffffff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .btn-send:disabled { background: var(--dark-hover); color: var(--text-muted); cursor: not-allowed; }
+  .btn-send:not(:disabled):hover { background: var(--brand-primary-hover); transform: scale(1.05); }
+
+  /* ---- Suggestion Chips ---- */
+  .btn-chip {
+    background: var(--dark-card);
+    border: 1px solid var(--dark-border);
+    border-radius: 12px;
+    padding: 0.75rem 1.125rem;
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: var(--font-primary);
+  }
+
+  .btn-chip:hover {
+    background: var(--dark-hover);
+    border-color: rgba(37, 99, 235, 0.3);
+    color: var(--text-primary);
+  }
+
+  /* ---- Message Bubbles ---- */
+  .msg-user {
+    background: var(--dark-card);
+    border-radius: 18px 18px 4px 18px;
+    padding: 0.875rem 1.25rem;
+    max-width: 75%;
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+    line-height: 1.6;
+  }
+
+  .msg-ai {
+    padding: 1rem 0;
+  }
+
+  .msg-ai-body {
+    font-size: 0.9375rem;
+    line-height: 1.8;
+    color: var(--text-primary);
+  }
+
+  .msg-ai-body p { margin-bottom: 0.625rem; }
+  .msg-ai-body ul, .msg-ai-body ol { padding-left: 1.25rem; margin-bottom: 0.75rem; }
+  .msg-ai-body li { margin-bottom: 0.25rem; }
+  .msg-ai-body strong { color: #ffffff; }
+  .msg-ai-body code { background: var(--dark-hover); padding: 0.125rem 0.375rem; border-radius: 4px; font-size: 0.85em; color: #a5b4fc; }
+
+  /* ---- Response Sections ---- */
+  .response-section {
+    margin-top: 0.875rem;
+    padding-top: 0.875rem;
+    border-top: 1px solid var(--dark-border);
+  }
+
+  .response-section-title {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  /* ---- Follow-up Buttons ---- */
+  .btn-followup {
+    background: var(--dark-card);
+    border: 1px solid var(--dark-border);
+    border-radius: 8px;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: var(--font-primary);
+  }
+
+  .btn-followup:hover {
+    border-color: var(--brand-primary);
+    color: var(--brand-primary-light);
+    background: rgba(37, 99, 235, 0.05);
+  }
+
+  /* ---- Warning Cards ---- */
+  .warning-card {
+    background: rgba(245, 158, 11, 0.05);
+    border: 1px solid rgba(245, 158, 11, 0.15);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    margin-top: 0.375rem;
+  }
+
+  /* ---- Typing Dots ---- */
+  .typing-dots { display: flex; gap: 4px; align-items: center; }
+  .typing-dots span {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    animation: bounceDot 1.4s infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bounceDot {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-5px); }
+  }
+
+  /* ---- Message Animation ---- */
+  .fade-msg {
+    animation: fadeMsg 0.3s ease forwards;
+  }
+
+  @keyframes fadeMsg {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---- AI Avatar ---- */
+  .ai-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.625rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  const chatMessages = document.getElementById('chatMessages');
+  const chatScroll = document.getElementById('chatScroll');
+  const chatForm = document.getElementById('chatForm');
+  const chatInput = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const typingArea = document.getElementById('typingArea');
+  const welcomeBlock = document.getElementById('welcomeBlock');
+  let processing = false;
+
+  // CSRF
+  function getCookie(n) {
+    for (let c of document.cookie.split(';')) {
+      c = c.trim();
+      if (c.startsWith(n + '=')) return decodeURIComponent(c.slice(n.length + 1));
+    }
+    return '';
+  }
+
+  // Input handlers
+  chatInput.addEventListener('input', () => {
+    chatInput.style.height = 'auto';
+    chatInput.style.height = Math.min(chatInput.scrollHeight, 160) + 'px';
+    sendBtn.disabled = !chatInput.value.trim() || processing;
+  });
+
+  chatInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); go(); }
+  });
+
+  chatForm.addEventListener('submit', (e) => { e.preventDefault(); go(); });
+
+  // Public function for suggestion chips
+  window.submitQuery = function(q) { chatInput.value = q; go(); };
+
+  // Submit query
+  function go() {
+    const q = chatInput.value.trim();
+    if (!q || processing) return;
+    chatInput.value = '';
+    chatInput.style.height = 'auto';
+    sendBtn.disabled = true;
+    if (welcomeBlock) welcomeBlock.remove();
+
+    addUserMessage(q);
+    processing = true;
+    typingArea.classList.remove('d-none');
+    scrollBottom();
+
+    fetch('/api/query/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+      body: JSON.stringify({ query: q })
+    })
+    .then(r => r.json())
+    .then(data => {
+      typingArea.classList.add('d-none');
+      processing = false;
+      sendBtn.disabled = false;
+      addAIMessage(data);
+      scrollBottom();
+    })
+    .catch(err => {
+      typingArea.classList.add('d-none');
+      processing = false;
+      sendBtn.disabled = false;
+      addAIMessage({ answer: 'Error: ' + err.message });
+    });
+  }
+
+  // Add user message
+  function addUserMessage(text) {
+    const div = document.createElement('div');
+    div.className = 'd-flex justify-content-end mb-4 fade-msg';
+    div.innerHTML = `<div class="msg-user">${esc(text)}</div>`;
+    chatMessages.appendChild(div);
+  }
+
+  // Add AI message
+  function addAIMessage(data) {
+    const div = document.createElement('div');
+    div.className = 'msg-ai mb-4 fade-msg';
+    let html = '<div class="d-flex gap-3"><div class="ai-avatar mt-1">IM</div><div class="msg-ai-body flex-grow-1" style="min-width: 0;">';
+
+    // Main answer
+    html += `<div>${formatText(data.answer || 'No response available.')}</div>`;
+
+    // Confidence
+    if (data.confidence) {
+      const pct = Math.round(data.confidence * 100);
+      const cls = pct >= 70 ? 'badge-success-soft' : pct >= 40 ? 'badge-warning-soft' : 'badge-danger-soft';
+      html += `<span class="badge ${cls} rounded-pill px-2 py-1 mt-2" style="font-size:0.6875rem;">Confidence: ${pct}%</span> `;
+    }
+
+    // Maintenance Analysis
+    if (data.maintenance_analysis) {
+      const m = data.maintenance_analysis;
+      if (m.risk_level) {
+        const rCls = m.risk_level === 'critical' ? 'badge-danger-soft' : m.risk_level === 'high' ? 'badge-warning-soft' : 'badge-info-soft';
+        html += `<span class="badge ${rCls} rounded-pill px-2 py-1" style="font-size:0.6875rem;"><i class="bi bi-wrench me-1"></i>Risk: ${m.risk_level.toUpperCase()}</span> `;
+      }
+      if (m.root_causes && m.root_causes.length) {
+        html += `<div class="response-section"><div class="response-section-title"><i class="bi bi-search me-1"></i>Possible Root Causes</div><ul class="mb-0" style="font-size:0.8125rem;">`;
+        m.root_causes.slice(0, 4).forEach(rc => {
+          html += `<li><strong>${esc(rc.cause)}</strong> <span class="badge badge-warning-soft rounded-pill px-2" style="font-size:0.625rem;">${rc.likelihood}</span></li>`;
+        });
+        html += '</ul></div>';
+      }
+      if (m.corrective_actions && m.corrective_actions.length) {
+        html += `<div class="response-section"><div class="response-section-title"><i class="bi bi-tools me-1"></i>Recommended Actions</div><ul class="mb-0" style="font-size:0.8125rem;">`;
+        m.corrective_actions.slice(0, 3).forEach(a => { html += `<li>${esc(a.action)}</li>`; });
+        html += '</ul></div>';
+      }
+      if (m.inspection_recommendations && m.inspection_recommendations.length) {
+        html += `<div class="response-section"><div class="response-section-title"><i class="bi bi-clipboard-check me-1"></i>Inspection Checklist</div><ul class="mb-0" style="font-size:0.8125rem;">`;
+        m.inspection_recommendations.slice(0, 5).forEach(i => { html += `<li>☐ ${esc(i)}</li>`; });
+        html += '</ul></div>';
+      }
+    }
+
+    // Compliance Analysis
+    if (data.compliance_analysis) {
+      const c = data.compliance_analysis;
+      html += `<div class="response-section"><div class="response-section-title"><i class="bi bi-shield-check me-1"></i>Compliance</div>`;
+      const sCls = c.compliance_status === 'compliant' ? 'badge-success-soft' : c.compliance_status === 'non_compliant' ? 'badge-danger-soft' : 'badge-warning-soft';
+      html += `<span class="badge ${sCls} rounded-pill px-2 py-1" style="font-size:0.6875rem;">${(c.compliance_status || '').replace('_', ' ').toUpperCase()}</span> `;
+      if (c.compliance_score) html += `<span class="badge badge-purple-soft rounded-pill px-2 py-1" style="font-size:0.6875rem;">Score: ${Math.round(c.compliance_score * 100)}%</span>`;
+      if (c.applicable_standards && c.applicable_standards.length) {
+        html += `<div class="mt-2" style="font-size:0.8125rem; color:var(--text-secondary);">Standards: ${c.applicable_standards.map(s => s.name).join(', ')}</div>`;
+      }
+      html += '</div>';
+    }
+
+    // Operations Report Warnings
+    if (data.operations_report && data.operations_report.warnings && data.operations_report.warnings.length) {
+      html += `<div class="response-section"><div class="response-section-title"><i class="bi bi-exclamation-triangle me-1"></i>Warnings</div>`;
+      data.operations_report.warnings.slice(0, 3).forEach(w => {
+        html += `<div class="warning-card mb-2"><strong style="font-size:0.8125rem; color:var(--text-primary);">${esc(w.title || '')}</strong><div style="font-size:0.75rem; color:var(--text-secondary); margin-top:0.25rem;">${esc(w.recommended_action || '')}</div></div>`;
+      });
+      html += '</div>';
+    }
+
+    // Suggested Follow-ups
+    if (data.suggested_followups && data.suggested_followups.length) {
+      html += `<div class="response-section"><div class="response-section-title"><i class="bi bi-lightbulb me-1"></i>Suggested Follow-ups</div><div class="d-flex flex-wrap gap-2 mt-1">`;
+      data.suggested_followups.forEach(q => {
+        html += `<button class="btn-followup" onclick="submitQuery('${escAttr(q)}')">${esc(q)}</button>`;
+      });
+      html += '</div></div>';
+    }
+
+    html += '</div></div>';
+    div.innerHTML = html;
+    chatMessages.appendChild(div);
+  }
+
+  // Utilities
+  function formatText(t) {
+    if (!t) return '';
+    let h = esc(t);
+    h = h.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    h = h.replace(/`([^`]+)`/g, '<code>$1</code>');
+    h = h.replace(/\[Source (\d+)\]/g, '<span class="badge badge-primary-soft rounded-pill px-2" style="font-size:0.625rem;">Source $1</span>');
+    h = h.replace(/\n/g, '<br>');
+    return h;
+  }
+
+  function esc(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+  function escAttr(t) { return t.replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+  function scrollBottom() { requestAnimationFrame(() => { chatScroll.scrollTop = chatScroll.scrollHeight; }); }
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% comment %}
+  Sidebar Item component — a single navigation entry in the collapsible
+  left sidebar. Handles active state, icon, label (hidden when
+  collapsed), and disabled/"coming soon" entries whose url_name is None.
+
+  Usage:
+  {% include "dashboard/components/_sidebar_item.html" with item=item %}
+  where `item` is a dict: {label, icon, url_name, active}
+{% endcomment %}
+{% if item.url_name %}
+<a
+  href="{% url item.url_name %}"
+  class="sidebar-item {% if item.active %}sidebar-item--active{% endif %}"
+  title="{{ item.label }}"
+>
+  <span class="sidebar-item__icon">
+    {% include "shared/_icon.html" with icon_name=item.icon %}
+  </span>
+  <span class="sidebar-item__label">{{ item.label }}</span>
+</a>
+{% else %}
+<span class="sidebar-item sidebar-item--disabled" title="{{ item.label }} — coming soon">
+  <span class="sidebar-item__icon">
+    {% include "shared/_icon.html" with icon_name=item.icon %}
+  </span>
+  <span class="sidebar-item__label">{{ item.label }}</span>
+</span>
+{% endif %}

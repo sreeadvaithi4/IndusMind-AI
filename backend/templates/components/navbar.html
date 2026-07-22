@@ -1,0 +1,151 @@
+{% load static %}
+<!-- ============================================================
+     IndusMind AI — Dark Navigation Bar
+     Used on: Dashboard, Chatbot, Documents, Analytics, Chat History
+     ============================================================ -->
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: var(--dark-surface); border-bottom: 1px solid var(--dark-border);">
+  <div class="container-fluid px-4">
+
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center gap-2" href="/home/">
+      <div class="d-flex align-items-center justify-content-center rounded-3 text-white fw-bold"
+           style="width: 34px; height: 34px; font-size: 11px; background: linear-gradient(135deg, #2563eb, #1d4ed8); box-shadow: 0 4px 12px rgba(37,99,235,0.3);">
+        IM
+      </div>
+      <span class="fw-bold text-white" style="font-size: 0.95rem;">IndusMind <span style="color: #60a5fa;">AI</span></span>
+    </a>
+
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Nav Links -->
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <ul class="navbar-nav mx-auto gap-1">
+        <li class="nav-item">
+          <a class="nav-link px-3 {% if request.path == '/home/' %}active{% endif %}" href="/home/">
+            <i class="bi bi-house-door me-1"></i> Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 {% if request.path == '/documents/' %}active{% endif %}" href="/documents/">
+            <i class="bi bi-file-earmark-text me-1"></i> Documents
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 {% if request.path == '/chatbot/' %}active{% endif %}" href="/chatbot/">
+            <i class="bi bi-chat-dots me-1"></i> AI Assistant
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 {% if request.path == '/dashboard/' %}active{% endif %}" href="/dashboard/">
+            <i class="bi bi-speedometer2 me-1"></i> Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 {% if request.path == '/analytics/' %}active{% endif %}" href="/analytics/">
+            <i class="bi bi-bar-chart-line me-1"></i> Analytics
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 {% if request.path == '/history/' %}active{% endif %}" href="/history/">
+            <i class="bi bi-clock-history me-1"></i> History
+          </a>
+        </li>
+      </ul>
+
+      <!-- Right Side -->
+      <div class="d-flex align-items-center gap-3">
+
+        <!-- System Status -->
+        <div class="d-none d-lg-flex align-items-center gap-2">
+          <span class="status-dot status-dot-success pulse-glow"></span>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">All Systems Online</span>
+        </div>
+
+        <!-- Notifications -->
+        <div class="dropdown">
+          <button class="btn btn-link text-secondary position-relative p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 1.1rem;">
+            <i class="bi bi-bell"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;" id="notifBadge">
+              0
+            </span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" style="background: var(--dark-card); border: 1px solid var(--dark-border); min-width: 280px;">
+            <li><h6 class="dropdown-header text-white">Notifications</h6></li>
+            <li><hr class="dropdown-divider" style="border-color: var(--dark-border);"></li>
+            <li><span class="dropdown-item-text text-secondary" style="font-size: 0.8125rem;">No new notifications</span></li>
+          </ul>
+        </div>
+
+        <!-- Profile Dropdown -->
+        <div class="dropdown">
+          <button class="btn btn-link text-secondary d-flex align-items-center gap-2 p-1 text-decoration-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="d-flex align-items-center justify-content-center rounded-circle text-white fw-semibold"
+                 style="width: 32px; height: 32px; font-size: 0.75rem; background: var(--dark-hover); border: 1px solid var(--dark-border);">
+              <i class="bi bi-person"></i>
+            </div>
+            <i class="bi bi-chevron-down" style="font-size: 0.7rem;"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" style="background: var(--dark-card); border: 1px solid var(--dark-border); min-width: 200px;">
+            <li><h6 class="dropdown-header text-white"><i class="bi bi-person-circle me-2"></i>{{ request.user.username|default:"Admin" }}</h6></li>
+            <li><hr class="dropdown-divider" style="border-color: var(--dark-border);"></li>
+            <li><a class="dropdown-item text-secondary" href="/dashboard/" style="font-size: 0.8125rem;"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+            <li><a class="dropdown-item text-secondary" href="/documents/" style="font-size: 0.8125rem;"><i class="bi bi-folder me-2"></i>Documents</a></li>
+            <li><a class="dropdown-item text-secondary" href="#" style="font-size: 0.8125rem;"><i class="bi bi-gear me-2"></i>Settings</a></li>
+            <li><hr class="dropdown-divider" style="border-color: var(--dark-border);"></li>
+            <li>
+              <form method="post" action="/logout/">
+                {% csrf_token %}
+                <button type="submit" class="dropdown-item text-secondary" style="font-size: 0.8125rem;">
+                  <i class="bi bi-box-arrow-right me-2"></i>Logout
+                </button>
+              </form>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+<style>
+  /* Navbar Overrides */
+  .navbar .nav-link {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-secondary) !important;
+    border-radius: 8px;
+    transition: all 0.15s ease;
+  }
+
+  .navbar .nav-link:hover {
+    color: var(--text-primary) !important;
+    background: var(--dark-hover);
+  }
+
+  .navbar .nav-link.active {
+    color: #ffffff !important;
+    background: rgba(37, 99, 235, 0.1);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+  }
+
+  .navbar .dropdown-item {
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    transition: background 0.15s ease;
+  }
+
+  .navbar .dropdown-item:hover {
+    background: var(--dark-hover) !important;
+    color: var(--text-primary) !important;
+  }
+
+  .navbar .dropdown-menu {
+    border-radius: 12px;
+    padding: 0.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+</style>

@@ -1,0 +1,350 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Analytics — IndusMind AI{% endblock %}
+
+{% block navbar %}
+  {% include "components/navbar.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 px-lg-5 py-4">
+
+  <!-- Page Header -->
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h1 class="text-white fw-bold mb-1" style="font-size: 1.5rem;">
+        <i class="bi bi-bar-chart-line me-2" style="color: var(--brand-primary-light);"></i>Analytics
+      </h1>
+      <p class="text-secondary mb-0" style="font-size: 0.8125rem;">Enterprise Operations Intelligence Analytics</p>
+    </div>
+    <button class="btn btn-outline-brand" onclick="loadAnalytics()">
+      <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+    </button>
+  </div>
+
+  <!-- Top Metric Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="card-dark p-4 h-100">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <span class="text-secondary" style="font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em;">Plant Health</span>
+          <div class="d-flex align-items-center justify-content-center rounded-3" style="width: 36px; height: 36px; background: rgba(16,185,129,0.1);">
+            <i class="bi bi-heart-pulse" style="color: var(--success);"></i>
+          </div>
+        </div>
+        <div class="fw-bold text-white" style="font-size: 2rem;" id="metricHealth">—</div>
+        <div class="text-secondary mt-1" style="font-size: 0.75rem;">Based on Knowledge Graph analysis</div>
+        <!-- Progress Bar -->
+        <div class="mt-3" style="background: var(--dark-hover); border-radius: 4px; height: 6px; overflow: hidden;">
+          <div id="healthBar" style="width: 0%; height: 100%; background: var(--success); border-radius: 4px; transition: width 0.8s ease;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card-dark p-4 h-100">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <span class="text-secondary" style="font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em;">Compliance Score</span>
+          <div class="d-flex align-items-center justify-content-center rounded-3" style="width: 36px; height: 36px; background: rgba(139,92,246,0.1);">
+            <i class="bi bi-shield-check" style="color: var(--purple);"></i>
+          </div>
+        </div>
+        <div class="fw-bold" style="font-size: 2rem; color: var(--purple);" id="metricCompliance">—</div>
+        <div class="text-secondary mt-1" style="font-size: 0.75rem;">ISO / API / ASME coverage</div>
+        <div class="mt-3" style="background: var(--dark-hover); border-radius: 4px; height: 6px; overflow: hidden;">
+          <div id="complianceBar" style="width: 0%; height: 100%; background: var(--purple); border-radius: 4px; transition: width 0.8s ease;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card-dark p-4 h-100">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <span class="text-secondary" style="font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em;">Failure Modes</span>
+          <div class="d-flex align-items-center justify-content-center rounded-3" style="width: 36px; height: 36px; background: rgba(239,68,68,0.1);">
+            <i class="bi bi-exclamation-octagon" style="color: var(--danger);"></i>
+          </div>
+        </div>
+        <div class="fw-bold" style="font-size: 2rem; color: var(--danger);" id="metricFailures">—</div>
+        <div class="text-secondary mt-1" style="font-size: 0.75rem;">Detected in Knowledge Graph</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card-dark p-4 h-100">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <span class="text-secondary" style="font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em;">Regulations</span>
+          <div class="d-flex align-items-center justify-content-center rounded-3" style="width: 36px; height: 36px; background: rgba(37,99,235,0.1);">
+            <i class="bi bi-journal-bookmark" style="color: var(--brand-primary-light);"></i>
+          </div>
+        </div>
+        <div class="fw-bold" style="font-size: 2rem; color: var(--brand-primary-light);" id="metricRegulations">—</div>
+        <div class="text-secondary mt-1" style="font-size: 0.75rem;">Standards being tracked</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="row g-4 mb-4">
+
+    <!-- Knowledge Graph Distribution -->
+    <div class="col-lg-6">
+      <div class="card-dark p-4 h-100">
+        <h6 class="text-white fw-semibold mb-1" style="font-size: 0.875rem;">
+          <i class="bi bi-diagram-3 me-2" style="color: var(--purple);"></i>Knowledge Graph Distribution
+        </h6>
+        <p class="text-secondary mb-3" style="font-size: 0.75rem;">Entity types in the industrial ontology</p>
+        <div id="kgDistChart" class="d-flex flex-column gap-2"></div>
+      </div>
+    </div>
+
+    <!-- Risk Assessment -->
+    <div class="col-lg-6">
+      <div class="card-dark p-4 h-100">
+        <h6 class="text-white fw-semibold mb-1" style="font-size: 0.875rem;">
+          <i class="bi bi-shield-exclamation me-2" style="color: var(--warning);"></i>Risk Assessment
+        </h6>
+        <p class="text-secondary mb-3" style="font-size: 0.75rem;">Equipment risk classification</p>
+
+        <div class="d-flex flex-column gap-3" id="riskBreakdown">
+          <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 40px; height: 40px; background: rgba(239,68,68,0.1);">
+              <i class="bi bi-exclamation-circle-fill" style="color: var(--danger); font-size: 1rem;"></i>
+            </div>
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between mb-1">
+                <span class="text-white" style="font-size: 0.8125rem;">Critical Alerts</span>
+                <span class="text-white fw-semibold" style="font-size: 0.8125rem;" id="riskCritical">—</span>
+              </div>
+              <div style="background: var(--dark-hover); border-radius: 4px; height: 5px; overflow: hidden;">
+                <div id="riskCriticalBar" style="width: 0%; height: 100%; background: var(--danger); border-radius: 4px; transition: width 0.8s ease;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 40px; height: 40px; background: rgba(245,158,11,0.1);">
+              <i class="bi bi-exclamation-triangle-fill" style="color: var(--warning); font-size: 1rem;"></i>
+            </div>
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between mb-1">
+                <span class="text-white" style="font-size: 0.8125rem;">Total Alerts</span>
+                <span class="text-white fw-semibold" style="font-size: 0.8125rem;" id="riskTotal">—</span>
+              </div>
+              <div style="background: var(--dark-hover); border-radius: 4px; height: 5px; overflow: hidden;">
+                <div id="riskTotalBar" style="width: 0%; height: 100%; background: var(--warning); border-radius: 4px; transition: width 0.8s ease;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 40px; height: 40px; background: rgba(16,185,129,0.1);">
+              <i class="bi bi-check-circle-fill" style="color: var(--success); font-size: 1rem;"></i>
+            </div>
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between mb-1">
+                <span class="text-white" style="font-size: 0.8125rem;">Healthy Equipment</span>
+                <span class="text-white fw-semibold" style="font-size: 0.8125rem;" id="riskHealthy">—</span>
+              </div>
+              <div style="background: var(--dark-hover); border-radius: 4px; height: 5px; overflow: hidden;">
+                <div id="riskHealthyBar" style="width: 0%; height: 100%; background: var(--success); border-radius: 4px; transition: width 0.8s ease;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Agent Capabilities & System Info -->
+  <div class="row g-4">
+
+    <!-- Agent Capabilities -->
+    <div class="col-lg-8">
+      <div class="card-dark p-4">
+        <h6 class="text-white fw-semibold mb-3" style="font-size: 0.875rem;">
+          <i class="bi bi-cpu me-2" style="color: var(--brand-primary-light);"></i>AI Agent Capabilities
+        </h6>
+        <div class="row g-3">
+          <div class="col-6 col-md-3">
+            <div class="text-center p-3 rounded-3" style="background: var(--dark-hover);">
+              <div class="mb-2" style="font-size: 1.5rem;">🔧</div>
+              <div class="text-secondary" style="font-size: 0.6875rem;">Maintenance RCA</div>
+              <div class="fw-bold text-white mt-1" style="font-size: 1.25rem;">15</div>
+              <div class="text-secondary" style="font-size: 0.625rem;">Failure Modes</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="text-center p-3 rounded-3" style="background: var(--dark-hover);">
+              <div class="mb-2" style="font-size: 1.5rem;">⚖️</div>
+              <div class="text-secondary" style="font-size: 0.6875rem;">Compliance</div>
+              <div class="fw-bold text-white mt-1" style="font-size: 1.25rem;">8</div>
+              <div class="text-secondary" style="font-size: 0.625rem;">Standards</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="text-center p-3 rounded-3" style="background: var(--dark-hover);">
+              <div class="mb-2" style="font-size: 1.5rem;">📐</div>
+              <div class="text-secondary" style="font-size: 0.6875rem;">Drawing Intel</div>
+              <div class="fw-bold text-white mt-1" style="font-size: 1.25rem;">20</div>
+              <div class="text-secondary" style="font-size: 0.625rem;">Symbol Types</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="text-center p-3 rounded-3" style="background: var(--dark-hover);">
+              <div class="mb-2" style="font-size: 1.5rem;">🧠</div>
+              <div class="text-secondary" style="font-size: 0.6875rem;">Knowledge Graph</div>
+              <div class="fw-bold text-white mt-1" style="font-size: 1.25rem;">30</div>
+              <div class="text-secondary" style="font-size: 0.625rem;">Entity Types</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="text-center p-3 rounded-3" style="background: var(--dark-hover);">
+              <div class="mb-2" style="font-size: 1.5rem;">🔍</div>
+              <div class="text-secondary" style="font-size: 0.6875rem;">Hybrid RAG</div>
+              <div class="fw-bold text-white mt-1" style="font-size: 1.25rem;">3</div>
+              <div class="text-secondary" style="font-size: 0.625rem;">Search Sources</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="text-center p-3 rounded-3" style="background: var(--dark-hover);">
+              <div class="mb-2" style="font-size: 1.5rem;">⚠️</div>
+              <div class="text-secondary" style="font-size: 0.6875rem;">Warning Engine</div>
+              <div class="fw-bold text-white mt-1" style="font-size: 1.25rem;">7</div>
+              <div class="text-secondary" style="font-size: 0.625rem;">Alert Types</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="text-center p-3 rounded-3" style="background: var(--dark-hover);">
+              <div class="mb-2" style="font-size: 1.5rem;">📈</div>
+              <div class="text-secondary" style="font-size: 0.6875rem;">Trend Analysis</div>
+              <div class="fw-bold text-white mt-1" style="font-size: 1.25rem;">5</div>
+              <div class="text-secondary" style="font-size: 0.625rem;">Trend Types</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="text-center p-3 rounded-3" style="background: var(--dark-hover);">
+              <div class="mb-2" style="font-size: 1.5rem;">🎙️</div>
+              <div class="text-secondary" style="font-size: 0.6875rem;">Executive Briefing</div>
+              <div class="fw-bold text-white mt-1" style="font-size: 1.25rem;">AI</div>
+              <div class="text-secondary" style="font-size: 0.625rem;">Generated</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- System Info -->
+    <div class="col-lg-4">
+      <div class="card-dark p-4 h-100">
+        <h6 class="text-white fw-semibold mb-3" style="font-size: 0.875rem;">
+          <i class="bi bi-gear me-2" style="color: var(--text-secondary);"></i>System Information
+        </h6>
+        <div class="d-flex flex-column gap-3">
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="text-secondary" style="font-size: 0.8125rem;">Backend Framework</span>
+            <span class="text-white" style="font-size: 0.8125rem;">Django 5.x</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="text-secondary" style="font-size: 0.8125rem;">LLM</span>
+            <span class="text-white" style="font-size: 0.8125rem;">Google Gemini</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="text-secondary" style="font-size: 0.8125rem;">Vector Store</span>
+            <span class="text-white" style="font-size: 0.8125rem;">ChromaDB</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="text-secondary" style="font-size: 0.8125rem;">Knowledge Graph</span>
+            <span class="text-white" style="font-size: 0.8125rem;">NetworkX</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="text-secondary" style="font-size: 0.8125rem;">OCR Engine</span>
+            <span class="text-white" style="font-size: 0.8125rem;">Tesseract</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="text-secondary" style="font-size: 0.8125rem;">Automated Tests</span>
+            <span class="badge badge-success-soft rounded-pill px-2" style="font-size: 0.6875rem;">528 Passing</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="text-secondary" style="font-size: 0.8125rem;">Production Services</span>
+            <span class="badge badge-primary-soft rounded-pill px-2" style="font-size: 0.6875rem;">21 Active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  function getCookie(n) {
+    for (let c of document.cookie.split(';')) { c = c.trim(); if (c.startsWith(n + '=')) return decodeURIComponent(c.slice(n.length + 1)); }
+    return '';
+  }
+
+  async function loadAnalytics() {
+    try {
+      const r = await fetch('/api/command-center/', { headers: { 'X-CSRFToken': getCookie('csrftoken') } });
+      if (!r.ok) return;
+      const d = await r.json();
+
+      // Top Metrics
+      const healthPct = d.plant_health_pct || 0;
+      const compPct = Math.round((d.compliance_score || 0) * 100);
+
+      document.getElementById('metricHealth').textContent = healthPct + '%';
+      document.getElementById('metricCompliance').textContent = compPct + '%';
+      document.getElementById('metricFailures').textContent = d.kpis?.failure_modes || '0';
+      document.getElementById('metricRegulations').textContent = d.kpis?.regulations || '0';
+
+      // Progress bars
+      document.getElementById('healthBar').style.width = healthPct + '%';
+      document.getElementById('complianceBar').style.width = compPct + '%';
+
+      // Risk section
+      const critical = d.critical_alerts || 0;
+      const totalAlerts = d.total_alerts || 0;
+      const equipment = d.kpis?.total_equipment || 0;
+
+      document.getElementById('riskCritical').textContent = critical;
+      document.getElementById('riskTotal').textContent = totalAlerts;
+      document.getElementById('riskHealthy').textContent = equipment;
+
+      const maxRisk = Math.max(critical, totalAlerts, equipment, 1);
+      document.getElementById('riskCriticalBar').style.width = (critical / maxRisk * 100) + '%';
+      document.getElementById('riskTotalBar').style.width = (totalAlerts / maxRisk * 100) + '%';
+      document.getElementById('riskHealthyBar').style.width = (equipment / maxRisk * 100) + '%';
+
+      // KG Distribution Chart
+      const types = d.knowledge_graph?.entity_types || {};
+      const total = Object.values(types).reduce((a, b) => a + b, 0) || 1;
+      const colors = [
+        'var(--brand-primary-light)', 'var(--purple)', 'var(--info)',
+        'var(--success)', 'var(--warning)', 'var(--danger)',
+        '#ec4899', '#f97316', '#84cc16', '#06b6d4'
+      ];
+
+      document.getElementById('kgDistChart').innerHTML = Object.entries(types)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .map(([k, v], i) => `
+          <div class="d-flex align-items-center gap-2">
+            <span class="text-secondary" style="font-size:0.75rem; width:100px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${k}</span>
+            <div class="flex-grow-1" style="background:var(--dark-hover); border-radius:4px; height:8px; overflow:hidden;">
+              <div style="width:${(v / total * 100).toFixed(0)}%; height:100%; background:${colors[i % colors.length]}; border-radius:4px; transition: width 0.8s ease;"></div>
+            </div>
+            <span class="text-white fw-medium" style="font-size:0.75rem; width:24px; text-align:right;">${v}</span>
+          </div>
+        `).join('');
+
+    } catch (e) {
+      console.error('Analytics load failed:', e);
+    }
+  }
+
+  window.loadAnalytics = loadAnalytics;
+  loadAnalytics();
+})();
+</script>
+{% endblock %}

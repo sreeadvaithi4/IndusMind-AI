@@ -1,0 +1,36 @@
+{% load static %}
+{% comment %}
+  Collapsible left sidebar. Persists its collapsed/expanded state in
+  localStorage via static/js/dashboard-sidebar.js. On mobile, becomes an
+  off-canvas drawer toggled from the topbar's hamburger button.
+{% endcomment %}
+<aside class="dashboard-sidebar" data-sidebar>
+  <div class="dashboard-sidebar__header">
+    <a href="{% url 'dashboard:overview' %}" class="dashboard-sidebar__brand">
+      <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-primary-blue to-accent-purple text-white text-sm font-bold shrink-0">IM</span>
+      <span class="dashboard-sidebar__brand-label">IndusMind <span class="text-primary-blue">AI</span></span>
+    </a>
+    <button type="button" class="dashboard-sidebar__collapse-btn" data-sidebar-collapse-toggle aria-label="Collapse sidebar">
+      {% include "shared/_icon.html" with icon_name="chevron-left" %}
+    </button>
+  </div>
+
+  <nav class="dashboard-sidebar__nav" aria-label="Dashboard navigation">
+    {% for item in sidebar_items %}
+      {% include "dashboard/components/_sidebar_item.html" with item=item %}
+    {% endfor %}
+  </nav>
+
+  <div class="dashboard-sidebar__footer">
+    <span class="sidebar-item sidebar-item--disabled" title="Profile — coming soon">
+      <span class="sidebar-item__icon">{% include "shared/_icon.html" with icon_name="user-circle" %}</span>
+      <span class="sidebar-item__label">Profile</span>
+    </span>
+    <span class="sidebar-item sidebar-item--disabled" title="Logout — coming soon">
+      <span class="sidebar-item__icon">{% include "shared/_icon.html" with icon_name="arrow-right-on-rectangle" %}</span>
+      <span class="sidebar-item__label">Logout</span>
+    </span>
+  </div>
+</aside>
+
+<button type="button" class="dashboard-sidebar__mobile-backdrop" data-sidebar-backdrop aria-hidden="true"></button>

@@ -1,0 +1,20 @@
+{% comment %}
+  Section Header component — eyebrow-style label with optional action
+  slot on the right. Used across all dashboard content sections.
+
+  Usage:
+  {% include "dashboard/components/_section_header.html" with title="Recent Documents" subtitle="Your latest uploads and their processing status" action_label="View All" action_url_name="dashboard:overview" %}
+{% endcomment %}
+<div class="flex items-start justify-between gap-4 mb-6" data-animate>
+  <div>
+    <h2 class="text-lg font-bold text-slate-900 dark:text-white">{{ title }}</h2>
+    {% if subtitle %}
+    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ subtitle }}</p>
+    {% endif %}
+  </div>
+  {% if action_label %}
+  <a href="{% if action_url_name %}{% url action_url_name %}{% else %}#{% endif %}" class="shrink-0 text-sm font-semibold text-primary-blue hover:text-blue-700 transition-colors">
+    {{ action_label }}
+  </a>
+  {% endif %}
+</div>

@@ -1,0 +1,17 @@
+__pycache__
+*.pyc
+*.pyo
+.git
+.gitignore
+*.md
+.env
+venv/
+.venv/
+node_modules/
+*.sqlite3
+db.sqlite3
+chroma_db/
+knowledge_graph.pkl
+backend/media/
+backend/uploads/
+backend/static_collected/

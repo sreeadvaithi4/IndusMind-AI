@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SECRET_KEY=change-me-in-production
+      - DJANGO_DEBUG=True
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+      - DATABASE_URL=postgres://indusmind:indusmind@db:5432/indusmind
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      - CHROMA_PERSIST_DIRECTORY=/data/chroma_db
+      - KG_PERSIST_PATH=/data/knowledge_graph.pkl
+      - OCR_ENABLED=True
+    volumes:
+      - chroma_data:/data
+      - media_data:/app/backend/media
+      - uploads_data:/app/backend/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/admin/')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=indusmind
+      - POSTGRES_USER=indusmind
+      - POSTGRES_PASSWORD=indusmind
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U indusmind"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  chroma_data:
+  media_data:
+  uploads_data:

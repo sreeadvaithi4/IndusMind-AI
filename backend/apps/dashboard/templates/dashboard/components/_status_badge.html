@@ -1,0 +1,69 @@
+{% comment %}
+  Status Badge component — renders a colored pill for document / pipeline
+  status values. Single source of truth for status → color/label mapping
+  so the Recent Documents table and Processing Status widget stay visually
+  consistent.
+
+  Usage: {% include "dashboard/components/_status_badge.html" with status="indexed" %}
+{% endcomment %}
+{% if status == "indexed" %}
+<span class="status-badge status-badge--success">
+  <span class="status-badge__dot"></span>Indexed
+</span>
+{% elif status == "embedding" %}
+<span class="status-badge status-badge--info">
+  <span class="status-badge__dot"></span>Embedding
+</span>
+{% elif status == "chunking" %}
+<span class="status-badge status-badge--info">
+  <span class="status-badge__dot"></span>Chunking
+</span>
+{% elif status == "parsing" %}
+<span class="status-badge status-badge--warning">
+  <span class="status-badge__dot"></span>Parsing
+</span>
+{% elif status == "uploading" %}
+<span class="status-badge status-badge--neutral">
+  <span class="status-badge__dot"></span>Uploading
+</span>
+{% elif status == "queued" %}
+<span class="status-badge status-badge--neutral">
+  <span class="status-badge__dot"></span>Queued
+</span>
+{% elif status == "uploaded" %}
+<span class="status-badge status-badge--neutral">
+  <span class="status-badge__dot"></span>Uploaded
+</span>
+{% elif status == "validating" %}
+<span class="status-badge status-badge--neutral">
+  <span class="status-badge__dot"></span>Validating
+</span>
+{% elif status == "stored" %}
+<span class="status-badge status-badge--info">
+  <span class="status-badge__dot"></span>Stored
+</span>
+{% elif status == "ready_for_parsing" %}
+<span class="status-badge status-badge--info">
+  <span class="status-badge__dot"></span>Ready for Parsing
+</span>
+{% elif status == "deleted" %}
+<span class="status-badge status-badge--danger">
+  <span class="status-badge__dot"></span>Deleted
+</span>
+{% elif status == "failed" %}
+<span class="status-badge status-badge--danger">
+  <span class="status-badge__dot"></span>Failed
+</span>
+{% elif status == "operational" %}
+<span class="status-badge status-badge--success">
+  <span class="status-badge__dot"></span>Operational
+</span>
+{% elif status == "degraded" %}
+<span class="status-badge status-badge--warning">
+  <span class="status-badge__dot"></span>Degraded
+</span>
+{% elif status == "offline" %}
+<span class="status-badge status-badge--danger">
+  <span class="status-badge__dot"></span>Offline
+</span>
+{% endif %}

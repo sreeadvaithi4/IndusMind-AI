@@ -1,0 +1,28 @@
+{% comment %}
+  Large drag & drop upload area — the left-side primary interaction
+  surface of the Upload Workspace. All drag/drop/browse/validation
+  behavior is wired in static/js/upload-workspace.js via the
+  data-attributes below.
+{% endcomment %}
+<section class="upload-dropzone-wrapper" data-animate>
+  {% include "dashboard/components/_section_header.html" with title="Upload Documents" subtitle="Drag and drop files, or browse to select from your device" %}
+
+  <div class="upload-dropzone" data-dropzone tabindex="0" role="button" aria-label="Upload documents by dragging and dropping, or press Enter to browse files">
+    <input type="file" id="upload-file-input" class="sr-only" multiple data-file-input>
+
+    <div class="upload-dropzone__icon" data-dropzone-icon>
+      {% include "shared/_icon.html" with icon_name="arrow-up-tray" %}
+    </div>
+
+    <p class="upload-dropzone__title">Drag &amp; drop files here</p>
+    <p class="upload-dropzone__subtitle">or</p>
+
+    <label for="upload-file-input" class="ds-btn ds-btn-primary" data-browse-button>
+      Browse Files
+    </label>
+
+    <p class="upload-dropzone__hint" data-supported-formats-hint>
+      Supports PDF, DOCX, DOC, TXT, CSV, XLSX
+    </p>
+  </div>
+</section>

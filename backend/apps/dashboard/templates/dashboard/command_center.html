@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard — IndusMind AI{% endblock %}
+
+{% block navbar %}
+  {% include "components/navbar.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 px-lg-5 py-4">
+
+  <!-- Page Header -->
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h1 class="text-white fw-bold mb-1" style="font-size: 1.5rem;">
+        <i class="bi bi-speedometer2 me-2" style="color: var(--brand-primary-light);"></i>Operations Dashboard
+      </h1>
+      <p class="text-secondary mb-0" style="font-size: 0.8125rem;">Executive Operations Intelligence Center</p>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-brand" id="refreshBtn" onclick="loadDashboard()">
+        <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+      </button>
+      <button class="btn btn-brand" id="briefingBtn">
+        <i class="bi bi-mic me-1"></i> Executive Briefing
+      </button>
+    </div>
+  </div>
+
+  <!-- Executive Briefing Panel (hidden by default) -->
+  <div class="card-dark p-4 mb-4 d-none fade-in" id="briefingPanel">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h6 class="text-white fw-semibold mb-0" style="font-size: 0.875rem;">
+        <i class="bi bi-mic-fill me-2" style="color: var(--brand-primary-light);"></i>Executive Briefing
+      </h6>
+      <button class="btn btn-sm text-secondary" onclick="document.getElementById('briefingPanel').classList.add('d-none')">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div id="briefingText" class="text-secondary" style="font-size: 0.875rem; line-height: 1.8; white-space: pre-line;">
+      Generating briefing...
+    </div>
+    <div id="briefingBadges" class="d-flex flex-wrap gap-2 mt-3"></div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-4 col-xl-2">
+      <div class="card-dark p-4 text-center h-100">
+        <div class="mb-2" style="font-size: 1.75rem;">🏭</div>
+        <div class="text-secondary" style="font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em;">Plant Health</div>
+        <div class="fw-bold mt-1" style="font-size: 1.5rem; color: var(--success);" id="kpiHealth">—</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4 col-xl-2">
+      <div class="card-dark p-4 text-center h-100">
+        <div class="mb-2" style="font-size: 1.75rem;">🛡️</div>
+        <div class="text-secondary" style="font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em;">Risk Level</div>
+        <div class="fw-bold mt-1" style="font-size: 1.5rem; color: var(--warning);" id="kpiRisk">—</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4 col-xl-2">
+      <div class="card-dark p-4 text-center h-100">
+        <div class="mb-2" style="font-size: 1.75rem;">⚖️</div>
+        <div class="text-secondary" style="font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em;">Compliance</div>
+        <div class="fw-bold mt-1" style="font-size: 1.5rem; color: var(--purple);" id="kpiCompliance">—</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4 col-xl-2">
+      <div class="card-dark p-4 text-center h-100">
+        <div class="mb-2" style="font-size: 1.75rem;">⚠️</div>
+        <div class="text-secondary" style="font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em;">Active Alerts</div>
+        <div class="fw-bold mt-1" style="font-size: 1.5rem; color: var(--danger);" id="kpiAlerts">—</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4 col-xl-2">
+      <div class="card-dark p-4 text-center h-100">
+        <div class="mb-2" style="font-size: 1.75rem;">⚙️</div>
+        <div class="text-secondary" style="font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em;">Equipment</div>
+        <div class="fw-bold mt-1" style="font-size: 1.5rem; color: var(--info);" id="kpiEquipment">—</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-4 col-xl-2">
+      <div class="card-dark p-4 text-center h-100">
+        <div class="mb-2" style="font-size: 1.75rem;">🧠</div>
+        <div class="text-secondary" style="font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em;">KG Nodes</div>
+        <div class="fw-bold mt-1" style="font-size: 1.5rem; color: var(--text-primary);" id="kpiNodes">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="row g-4">
+
+    <!-- Left Column -->
+    <div class="col-lg-8">
+
+      <!-- Alert Center -->
+      <div class="card-dark p-4 mb-4">
+        <h6 class="text-white fw-semibold mb-3" style="font-size: 0.875rem;">
+          <i class="bi bi-exclamation-triangle me-2" style="color: var(--warning);"></i>Operations Alert Center
+        </h6>
+        <div id="alertCenter" style="max-height: 260px; overflow-y: auto;" class="scrollbar-thin">
+          <div class="text-center py-4">
+            <i class="bi bi-check-circle text-secondary" style="font-size: 2rem; opacity: 0.4;"></i>
+            <p class="text-secondary mt-2 mb-0" style="font-size: 0.8125rem;">Loading alerts...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Knowledge Graph Summary -->
+      <div class="card-dark p-4">
+        <h6 class="text-white fw-semibold mb-3" style="font-size: 0.875rem;">
+          <i class="bi bi-diagram-3 me-2" style="color: var(--purple);"></i>Knowledge Graph
+        </h6>
+        <div class="row g-3" id="kgStats">
+          <div class="col-4 text-center">
+            <div class="fw-bold text-white" style="font-size: 1.25rem;" id="kgNodes">—</div>
+            <div class="text-secondary" style="font-size: 0.6875rem;">Nodes</div>
+          </div>
+          <div class="col-4 text-center">
+            <div class="fw-bold text-white" style="font-size: 1.25rem;" id="kgEdges">—</div>
+            <div class="text-secondary" style="font-size: 0.6875rem;">Relationships</div>
+          </div>
+          <div class="col-4 text-center">
+            <div class="fw-bold text-white" style="font-size: 1.25rem;" id="kgTypes">—</div>
+            <div class="text-secondary" style="font-size: 0.6875rem;">Entity Types</div>
+          </div>
+        </div>
+        <div id="kgBreakdown" class="mt-3 pt-3" style="border-top: 1px solid var(--dark-border);"></div>
+      </div>
+
+    </div>
+
+    <!-- Right Column -->
+    <div class="col-lg-4">
+
+      <!-- Agent Status -->
+      <div class="card-dark p-4 mb-4">
+        <h6 class="text-white fw-semibold mb-3" style="font-size: 0.875rem;">
+          <i class="bi bi-cpu me-2" style="color: var(--brand-primary-light);"></i>AI Agent Status
+        </h6>
+        <div class="d-flex flex-column gap-2">
+          <div class="d-flex align-items-center justify-content-between p-2 rounded-3" style="background: var(--dark-hover);">
+            <div class="d-flex align-items-center gap-2"><i class="bi bi-wrench text-secondary"></i><span style="font-size: 0.8125rem;" class="text-white">Maintenance Agent</span></div>
+            <span class="badge badge-success-soft rounded-pill" style="font-size: 0.625rem;">Ready</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-between p-2 rounded-3" style="background: var(--dark-hover);">
+            <div class="d-flex align-items-center gap-2"><i class="bi bi-shield-check text-secondary"></i><span style="font-size: 0.8125rem;" class="text-white">Compliance Agent</span></div>
+            <span class="badge badge-success-soft rounded-pill" style="font-size: 0.625rem;">Ready</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-between p-2 rounded-3" style="background: var(--dark-hover);">
+            <div class="d-flex align-items-center gap-2"><i class="bi bi-lightning text-secondary"></i><span style="font-size: 0.8125rem;" class="text-white">Failure Intelligence</span></div>
+            <span class="badge badge-success-soft rounded-pill" style="font-size: 0.625rem;">Ready</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-between p-2 rounded-3" style="background: var(--dark-hover);">
+            <div class="d-flex align-items-center gap-2"><i class="bi bi-diagram-3 text-secondary"></i><span style="font-size: 0.8125rem;" class="text-white">Knowledge Graph</span></div>
+            <span class="badge badge-success-soft rounded-pill" style="font-size: 0.625rem;">Ready</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-between p-2 rounded-3" style="background: var(--dark-hover);">
+            <div class="d-flex align-items-center gap-2"><i class="bi bi-image text-secondary"></i><span style="font-size: 0.8125rem;" class="text-white">Drawing Analysis</span></div>
+            <span class="badge badge-success-soft rounded-pill" style="font-size: 0.625rem;">Ready</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-between p-2 rounded-3" style="background: var(--dark-hover);">
+            <div class="d-flex align-items-center gap-2"><i class="bi bi-bell text-secondary"></i><span style="font-size: 0.8125rem;" class="text-white">Warning Engine</span></div>
+            <span class="badge badge-success-soft rounded-pill" style="font-size: 0.625rem;">Ready</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-between p-2 rounded-3" style="background: var(--dark-hover);">
+            <div class="d-flex align-items-center gap-2"><i class="bi bi-graph-up text-secondary"></i><span style="font-size: 0.8125rem;" class="text-white">Trend Analysis</span></div>
+            <span class="badge badge-success-soft rounded-pill" style="font-size: 0.625rem;">Ready</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-between p-2 rounded-3" style="background: var(--dark-hover);">
+            <div class="d-flex align-items-center gap-2"><i class="bi bi-stars text-secondary"></i><span style="font-size: 0.8125rem;" class="text-white">Gemini LLM</span></div>
+            <span class="badge badge-success-soft rounded-pill" style="font-size: 0.625rem;">Ready</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card-dark p-4">
+        <h6 class="text-white fw-semibold mb-3" style="font-size: 0.875rem;">
+          <i class="bi bi-lightning-charge me-2" style="color: var(--warning);"></i>Quick Actions
+        </h6>
+        <div class="d-grid gap-2">
+          <a href="/chatbot/" class="btn btn-brand text-start"><i class="bi bi-chat-dots me-2"></i>Ask AI Assistant</a>
+          <a href="/documents/" class="btn btn-outline-brand text-start"><i class="bi bi-upload me-2"></i>Upload Documents</a>
+          <a href="/analytics/" class="btn btn-outline-brand text-start"><i class="bi bi-bar-chart-line me-2"></i>View Analytics</a>
+          <a href="/history/" class="btn btn-outline-brand text-start"><i class="bi bi-clock-history me-2"></i>Chat History</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  function getCookie(n) {
+    for (let c of document.cookie.split(';')) { c = c.trim(); if (c.startsWith(n + '=')) return decodeURIComponent(c.slice(n.length + 1)); }
+    return '';
+  }
+
+  // Load Dashboard Data
+  async function loadDashboard() {
+    try {
+      const r = await fetch('/api/command-center/', { headers: { 'X-CSRFToken': getCookie('csrftoken') } });
+      if (!r.ok) return;
+      const d = await r.json();
+
+      // KPIs
+      document.getElementById('kpiHealth').textContent = d.plant_health_pct ? d.plant_health_pct + '%' : (d.plant_health || '—').toUpperCase();
+      document.getElementById('kpiRisk').textContent = (d.overall_risk || '—').toUpperCase();
+      document.getElementById('kpiCompliance').textContent = Math.round((d.compliance_score || 0) * 100) + '%';
+      document.getElementById('kpiAlerts').textContent = d.critical_alerts || '0';
+      document.getElementById('kpiEquipment').textContent = d.kpis?.total_equipment || '0';
+      document.getElementById('kpiNodes').textContent = d.kpis?.total_nodes || '0';
+
+      // Color-code risk
+      const riskEl = document.getElementById('kpiRisk');
+      if (d.overall_risk === 'critical') riskEl.style.color = 'var(--danger)';
+      else if (d.overall_risk === 'high') riskEl.style.color = '#f97316';
+      else if (d.overall_risk === 'medium') riskEl.style.color = 'var(--warning)';
+      else riskEl.style.color = 'var(--success)';
+
+      // Alerts
+      const alertCenter = document.getElementById('alertCenter');
+      if (d.warnings && d.warnings.length > 0) {
+        alertCenter.innerHTML = d.warnings.map(w => {
+          const borderClass = w.severity === 'CRITICAL' ? 'alert-card-critical' : w.severity === 'HIGH' ? 'alert-card-high' : 'alert-card-medium';
+          return `<div class="alert-card ${borderClass} mb-2">
+            <div class="fw-semibold text-white" style="font-size:0.8125rem;">${w.title || 'Alert'}</div>
+            <div class="d-flex gap-2 mt-1">
+              <span class="badge badge-warning-soft rounded-pill" style="font-size:0.625rem;">${w.severity}</span>
+              <span class="text-secondary" style="font-size:0.75rem;">${w.warning_type || ''}</span>
+            </div>
+            ${w.recommended_action ? `<div class="text-secondary mt-1" style="font-size:0.75rem;">${w.recommended_action}</div>` : ''}
+          </div>`;
+        }).join('');
+      } else {
+        alertCenter.innerHTML = `<div class="text-center py-4"><i class="bi bi-check-circle" style="font-size:2rem; color:var(--success); opacity:0.6;"></i><p class="text-secondary mt-2 mb-0" style="font-size:0.8125rem;">All systems nominal — no active alerts</p></div>`;
+      }
+
+      // KG Stats
+      const kg = d.knowledge_graph || {};
+      document.getElementById('kgNodes').textContent = kg.total_nodes || '0';
+      document.getElementById('kgEdges').textContent = kg.total_edges || '0';
+      const types = kg.entity_types || {};
+      document.getElementById('kgTypes').textContent = Object.keys(types).length || '0';
+
+      // KG Breakdown
+      const colors = ['var(--brand-primary-light)', 'var(--purple)', 'var(--info)', 'var(--success)', 'var(--warning)', 'var(--danger)'];
+      const total = Object.values(types).reduce((a, b) => a + b, 0) || 1;
+      document.getElementById('kgBreakdown').innerHTML = Object.entries(types)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 6)
+        .map(([k, v], i) => `
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="text-secondary" style="font-size:0.75rem; width:90px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${k}</span>
+            <div class="flex-grow-1" style="background:var(--dark-hover); border-radius:4px; height:6px; overflow:hidden;">
+              <div style="width:${(v / total * 100).toFixed(0)}%; height:100%; background:${colors[i % colors.length]}; border-radius:4px;"></div>
+            </div>
+            <span class="text-white fw-medium" style="font-size:0.75rem; width:20px; text-align:right;">${v}</span>
+          </div>
+        `).join('');
+
+    } catch (e) {
+      console.error('Dashboard load failed:', e);
+    }
+  }
+
+  // Executive Briefing
+  document.getElementById('briefingBtn').addEventListener('click', async () => {
+    const panel = document.getElementById('briefingPanel');
+    panel.classList.remove('d-none');
+    document.getElementById('briefingText').textContent = 'Generating executive briefing...';
+    document.getElementById('briefingBadges').innerHTML = '';
+
+    try {
+      const r = await fetch('/api/briefing/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+        body: JSON.stringify({ query: 'Generate daily operations briefing' })
+      });
+      const data = await r.json();
+      const b = data.briefing || {};
+
+      document.getElementById('briefingText').textContent = b.text || 'Briefing unavailable.';
+      document.getElementById('briefingBadges').innerHTML = `
+        <span class="badge badge-success-soft rounded-pill px-2 py-1" style="font-size:0.6875rem;">Health: ${(b.plant_health || '').toUpperCase()}</span>
+        <span class="badge badge-warning-soft rounded-pill px-2 py-1" style="font-size:0.6875rem;">Risk: ${(b.overall_risk || '').toUpperCase()}</span>
+        <span class="badge badge-primary-soft rounded-pill px-2 py-1" style="font-size:0.6875rem;">Confidence: ${Math.round((b.confidence || 0) * 100)}%</span>
+      `;
+    } catch (e) {
+      document.getElementById('briefingText').textContent = 'Failed to generate briefing.';
+    }
+  });
+
+  // Expose for refresh button
+  window.loadDashboard = loadDashboard;
+
+  // Initial load
+  loadDashboard();
+})();
+</script>
+{% endblock %}

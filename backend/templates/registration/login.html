@@ -1,0 +1,367 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — IndusMind AI</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-display: 'Poppins', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background: #0a0e14;
+      position: relative;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Animated Background */
+    body::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(37, 99, 235, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(6, 182, 212, 0.06) 0%, transparent 50%);
+      animation: bgFloat 20s ease-in-out infinite;
+    }
+
+    @keyframes bgFloat {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(2%, -1%) rotate(1deg); }
+      66% { transform: translate(-1%, 2%) rotate(-1deg); }
+    }
+
+    /* Grid Background Pattern */
+    body::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    /* Login Container */
+    .login-container {
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Logo Section */
+    .logo-section {
+      text-align: center;
+      margin-bottom: 2rem;
+      animation: fadeDown 0.6s ease forwards;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+      box-shadow: 0 8px 32px rgba(37, 99, 235, 0.3);
+      margin-bottom: 1rem;
+    }
+
+    .logo-text {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    .logo-text span { color: #60a5fa; }
+
+    .logo-subtitle {
+      font-size: 0.8125rem;
+      color: #6e7681;
+      margin-top: 0.25rem;
+    }
+
+    /* Glass Card */
+    .login-card {
+      background: rgba(22, 27, 34, 0.75);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(48, 54, 61, 0.6);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+      animation: fadeUp 0.6s ease 0.2s forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-card h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #f0f6fc;
+      margin-bottom: 0.25rem;
+    }
+
+    .login-card .subtitle {
+      font-size: 0.8125rem;
+      color: #8b949e;
+      margin-bottom: 2rem;
+    }
+
+    /* Form Controls */
+    .form-label {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: #c9d1d9;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-control-custom {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: rgba(13, 17, 23, 0.6);
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      color: #f0f6fc;
+      font-size: 0.9rem;
+      font-family: var(--font-primary);
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    .form-control-custom::placeholder {
+      color: #484f58;
+    }
+
+    .form-control-custom:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      background: rgba(13, 17, 23, 0.8);
+    }
+
+    /* Remember & Forgot */
+    .form-check-input {
+      background-color: #21262d;
+      border-color: #30363d;
+    }
+
+    .form-check-input:checked {
+      background-color: #2563eb;
+      border-color: #2563eb;
+    }
+
+    .form-check-label {
+      font-size: 0.8125rem;
+      color: #8b949e;
+    }
+
+    .forgot-link {
+      font-size: 0.8125rem;
+      color: #58a6ff;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .forgot-link:hover { color: #79c0ff; }
+
+    /* Submit Button */
+    .btn-login {
+      width: 100%;
+      padding: 0.9375rem;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      border: none;
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-login:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 32px rgba(37, 99, 235, 0.45);
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+    /* Error Alert */
+    .error-alert {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+    }
+
+    .error-alert i { color: #ef4444; font-size: 1rem; }
+    .error-alert span { color: #fca5a5; font-size: 0.8125rem; }
+
+    /* Help Text */
+    .help-text {
+      text-align: center;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(48, 54, 61, 0.5);
+    }
+
+    .help-text p {
+      font-size: 0.75rem;
+      color: #484f58;
+    }
+
+    .help-text code {
+      background: rgba(110, 118, 129, 0.1);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      color: #8b949e;
+    }
+
+    /* Footer */
+    .login-footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: #30363d;
+      animation: fadeUp 0.6s ease 0.4s forwards;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+
+    <!-- Logo -->
+    <div class="logo-section">
+      <div class="logo-icon">IM</div>
+      <div class="logo-text">IndusMind <span>AI</span></div>
+      <div class="logo-subtitle">Industrial Knowledge Intelligence Platform</div>
+    </div>
+
+    <!-- Login Card -->
+    <div class="login-card">
+      <h2>Welcome back</h2>
+      <p class="subtitle">Sign in to access the platform</p>
+
+      <!-- Error Message -->
+      {% if form.errors %}
+      <div class="error-alert">
+        <i class="bi bi-exclamation-circle-fill"></i>
+        <span>Invalid credentials. Please check your username and password.</span>
+      </div>
+      {% endif %}
+
+      <!-- Login Form -->
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next|default:'/home/' }}">
+
+        <!-- Username -->
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input
+            type="text"
+            name="username"
+            class="form-control-custom"
+            placeholder="Enter your username"
+            required
+            autofocus
+          >
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input
+            type="password"
+            name="password"
+            class="form-control-custom"
+            placeholder="Enter your password"
+            required
+          >
+        </div>
+
+        <!-- Remember & Forgot -->
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="remember" id="rememberMe">
+            <label class="form-check-label" for="rememberMe">Remember me</label>
+          </div>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-login">
+          Sign In <i class="bi bi-arrow-right ms-1"></i>
+        </button>
+      </form>
+
+      <!-- Help -->
+      <div class="help-text">
+        <p>First time? Run <code>python manage.py createsuperuser</code></p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="login-footer">
+      © 2026 IndusMind AI · All Rights Reserved
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+{% comment %}
+  Recent Documents data table for the Upload Workspace — search,
+  filter, sort, and paginate over the existing DocumentListView API.
+  All rows are rendered client-side by static/js/upload-workspace.js;
+  this partial provides the toolbar and table shell.
+{% endcomment %}
+<section class="upload-documents-wrapper" data-animate>
+  {% include "dashboard/components/_section_header.html" with title="Recent Documents" subtitle="Search and manage your uploaded documents" %}
+
+  <div class="dash-card overflow-hidden">
+    <div class="upload-documents__toolbar">
+      <label class="dashboard-search upload-documents__search" for="upload-documents-search">
+        <span class="dashboard-search__icon">{% include "shared/_icon.html" with icon_name="magnifying-glass" %}</span>
+        <input
+          id="upload-documents-search"
+          type="search"
+          placeholder="Search documents…"
+          class="dashboard-search__input"
+          data-documents-search
+        >
+      </label>
+
+      <select class="upload-documents__filter" data-documents-status-filter aria-label="Filter by status">
+        <option value="">All Statuses</option>
+        <option value="uploaded">Uploaded</option>
+        <option value="stored">Stored</option>
+        <option value="ready_for_parsing">Ready for Parsing</option>
+        <option value="failed">Failed</option>
+      </select>
+
+      <select class="upload-documents__filter" data-documents-extension-filter aria-label="Filter by file type">
+        <option value="">All Types</option>
+        <option value="pdf">PDF</option>
+        <option value="docx">DOCX</option>
+        <option value="doc">DOC</option>
+        <option value="txt">TXT</option>
+        <option value="csv">CSV</option>
+        <option value="xlsx">XLSX</option>
+      </select>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="dash-table">
+        <thead>
+          <tr>
+            <th scope="col" data-sort-key="original_filename" class="dash-table__sortable">Filename</th>
+            <th scope="col" data-sort-key="extension" class="dash-table__sortable">Type</th>
+            <th scope="col" data-sort-key="file_size" class="dash-table__sortable text-right">Size</th>
+            <th scope="col" data-sort-key="created_at" class="dash-table__sortable">Upload Date</th>
+            <th scope="col">Status</th>
+            <th scope="col" class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody data-documents-table-body>
+          <tr data-documents-table-empty>
+            <td colspan="6" class="upload-documents__empty">No documents uploaded yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="upload-documents__pagination" data-documents-pagination>
+      <button type="button" class="ds-btn ds-btn-secondary" data-documents-prev-page disabled>
+        {% include "shared/_icon.html" with icon_name="chevron-left" %}
+        Previous
+      </button>
+      <span class="upload-documents__page-info" data-documents-page-info>Page 1</span>
+      <button type="button" class="ds-btn ds-btn-secondary" data-documents-next-page disabled>
+        Next
+        {% include "shared/_icon.html" with icon_name="chevron-right" %}
+      </button>
+    </div>
+  </div>
+</section>

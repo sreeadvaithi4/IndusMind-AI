@@ -1,0 +1,23 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+<div class="dashboard-shell">
+  {% include "dashboard/partials/sidebar.html" %}
+
+  <div class="dashboard-shell__main">
+    {% include "dashboard/partials/topbar.html" %}
+
+    <div class="dashboard-shell__body">
+      <main class="dashboard-content">
+        {% include "dashboard/partials/welcome.html" %}
+        {% include "dashboard/partials/summary_cards.html" %}
+        {% include "dashboard/partials/processing_status.html" %}
+        {% include "dashboard/partials/recent_documents.html" %}
+        {% include "dashboard/partials/activity_feed.html" %}
+      </main>
+
+      {% include "dashboard/partials/right_panel.html" %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% comment %}
+  Navigation Item component — a small icon-button used in the top
+  navigation bar (notifications, dark mode toggle, etc). Distinct from
+  Sidebar Item, which is label + icon in a vertical list.
+
+  Usage:
+  {% include "dashboard/components/_nav_item.html" with icon="bell" aria_label="Notifications" data_attr="data-notifications-toggle" badge_count=3 %}
+{% endcomment %}
+<button
+  type="button"
+  class="nav-icon-btn"
+  aria-label="{{ aria_label }}"
+  {% if data_attr %}{{ data_attr }}{% endif %}
+>
+  {% include "shared/_icon.html" with icon_name=icon %}
+  {% if badge_count %}
+  <span class="nav-icon-btn__badge">{{ badge_count }}</span>
+  {% endif %}
+</button>

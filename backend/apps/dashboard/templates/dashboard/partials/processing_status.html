@@ -1,0 +1,21 @@
+{% comment %}
+  Processing Status widget: horizontal pipeline showing the current
+  document moving through Uploading → Parsing → Chunking → Generating
+  Embeddings → Updating ChromaDB → Updating Knowledge Graph → Completed.
+{% endcomment %}
+<section data-processing-status>
+  {% include "dashboard/components/_section_header.html" with title="Processing Pipeline" subtitle=processing_pipeline.document_name %}
+
+  <div class="dash-card p-6 sm:p-8" data-animate>
+    <div class="overflow-x-auto pb-2">
+      <div class="pipeline-track" data-timeline-track>
+        {% for stage in processing_pipeline.stages %}
+          {% include "dashboard/components/_progress_widget.html" with stage=stage %}
+          {% if not forloop.last %}
+          <div class="pipeline-connector {% if stage.state == 'complete' %}is-filled{% endif %}"></div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>

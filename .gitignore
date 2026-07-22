@@ -1,0 +1,53 @@
+# Byte-compiled / cached
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+/backend/static_collected/
+/backend/media/
+/backend/uploads/
+
+# Environment
+.env
+.env.*
+!.env.example
+venv/
+env/
+ENV/
+.venv/
+
+# ChromaDB persistence
+/chroma_db/
+/backend/chroma_db/
+
+# Vector store / dataset artifacts
+*.index
+*.pkl
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing / coverage
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Build
+build/
+dist/
+*.egg-info/

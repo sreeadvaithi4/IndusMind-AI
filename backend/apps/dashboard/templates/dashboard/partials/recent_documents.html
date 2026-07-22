@@ -1,0 +1,53 @@
+{% comment %}
+  Recent Documents table: name, uploader, upload time, pages, chunks,
+  status badge, and row actions.
+{% endcomment %}
+<section data-recent-documents>
+  {% include "dashboard/components/_section_header.html" with title="Recent Documents" subtitle="Your organization's latest uploads and their processing status" action_label="View All" action_url_name="dashboard:overview" %}
+
+  <div class="dash-card overflow-hidden" data-animate>
+    <div class="overflow-x-auto">
+      <table class="dash-table">
+        <thead>
+          <tr>
+            <th scope="col">Document Name</th>
+            <th scope="col">Uploaded By</th>
+            <th scope="col">Upload Time</th>
+            <th scope="col" class="text-right">Pages</th>
+            <th scope="col" class="text-right">Chunks</th>
+            <th scope="col">Status</th>
+            <th scope="col" class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for doc in recent_documents %}
+          <tr>
+            <td class="dash-table__doc-name">
+              <span class="dash-table__doc-icon">{% include "shared/_icon.html" with icon_name="document-text" %}</span>
+              {{ doc.name }}
+            </td>
+            <td>{{ doc.uploaded_by }}</td>
+            <td class="text-slate-500 dark:text-slate-400">{{ doc.uploaded_at }}</td>
+            <td class="text-right">{{ doc.pages }}</td>
+            <td class="text-right">{{ doc.chunks }}</td>
+            <td>{% include "dashboard/components/_status_badge.html" with status=doc.status %}</td>
+            <td class="text-right">
+              <div class="dash-table__actions">
+                <button type="button" class="dash-table__action-btn" aria-label="View {{ doc.name }}">
+                  {% include "shared/_icon.html" with icon_name="eye" %}
+                </button>
+                <button type="button" class="dash-table__action-btn" aria-label="Download {{ doc.name }}">
+                  {% include "shared/_icon.html" with icon_name="arrow-down-tray" %}
+                </button>
+                <button type="button" class="dash-table__action-btn dash-table__action-btn--danger" aria-label="Delete {{ doc.name }}">
+                  {% include "shared/_icon.html" with icon_name="trash" %}
+                </button>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
